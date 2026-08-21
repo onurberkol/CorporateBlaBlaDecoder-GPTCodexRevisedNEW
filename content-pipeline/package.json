@@ -1,0 +1,20 @@
+{
+  "name": "@corporate-blabla/content-pipeline",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "tsx src/index.ts",
+    "generate:firestore": "tsx src/index.ts --out=firestore",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "firebase-admin": "^12.6.0",
+    "openai": "^6.0.0"
+  },
+  "devDependencies": {
+    "tsx": "^4.19.0",
+    "typescript": "^5.4.0",
+    "@types/node": "^20.14.0"
+  }
+}
