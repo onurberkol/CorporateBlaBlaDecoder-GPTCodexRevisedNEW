@@ -1,0 +1,388 @@
+<style>
+  .i{ width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.8; vertical-align:-2px; }
+  .i.sm{ width:13px; height:13px; }
+  body{ font-size:10.6pt; line-height:1.62; }
+  p{ margin:0 0 10px; }
+  h2{ margin:22px 0 10px; font-size:15.5pt; }
+  h3{ font-size:12.8pt; margin-top:18px; }
+  .drop{ font-family:Georgia,"DejaVu Serif",serif; font-size:30pt; line-height:0.8; float:left; color:var(--red); padding:6px 9px 0 0; }
+  .twocol{ display:flex; gap:18px; align-items:center; page-break-inside:avoid; margin:14px 0; }
+  .twocol .txt{ flex:1; }
+  .twocol .shot{ flex:0 0 198px; }
+  .wrap-ph{ zoom:0.80; }
+  .shot.figure{ zoom:1; }
+  .note{ background:var(--alt); border-radius:8px; padding:10px 13px; font-size:9.4pt; color:#4a4338; margin:10px 0; }
+  .ex{ border-left:2px solid var(--line2); padding:2px 0 2px 13px; margin:10px 0; }
+  .ex .in{ font-style:italic; color:#4a4338; }
+  .ex .out{ font-family:Georgia,serif; color:var(--ink); }
+</style>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <g id="share"><path d="M12 3v12M8 7l4-4 4 4M5 13v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6"/></g>
+  <g id="flame"><path d="M12 3c.5 3 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-2.5C9.5 9 10 6 12 3z" fill="currentColor" stroke="none"/></g>
+  <g id="check"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></g>
+  <g id="x"><path d="M6 6l12 12M18 6L6 18"/></g>
+  <g id="cal"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 9h16M8 3v4M16 3v4"/></g>
+  <g id="mail"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></g>
+  <g id="pencil"><path d="M4 20l4-1L19 8l-3-3L5 16l-1 4z"/></g>
+  <g id="user"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></g>
+  <g id="clock"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g>
+  <g id="hist"><path d="M4 12a8 8 0 1 0 2-5"/><path d="M4 4v4h4M12 8v4l3 2"/></g>
+  <g id="chev"><path d="M9 6l6 6-6 6"/></g>
+</defs></svg>
+
+<!-- ============ COVER ============ -->
+<div class="cover">
+  <div class="mk">cb</div>
+  <div class="cover-mid">
+    <span class="tag">Ürün Dokümanı · v1</span>
+    <h1>Corporate BlaBla<br>Decoder</h1>
+    <div class="sub">Plaza dilini çözen, mesajını istediğin tonda yeniden yazan ve ofis grubunda viral olmak için tasarlanmış komütçü-öncelikli mobil uygulama. Bu doküman fikrin doğuşunu, ürünün her detayını ve kullanımını baştan sona anlatır.</div>
+  </div>
+  <div class="cover-foot">
+    <div>
+      <div style="font-family:Georgia,serif;font-size:12pt;color:var(--ink)">Odit Teknoloji ve İletişim Hizmetleri Ticaret A.Ş.</div>
+      <div>İstanbul</div>
+    </div>
+    <div style="text-align:right">
+      <div>TR: <b>Corporate BlaBla Decoder</b></div>
+      <div>US: <b>Per My Last Email</b></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ GİRİŞ ============ -->
+<div class="pb section">
+  <h2 style="margin-top:0">Bir cümlede</h2>
+  <p class="lead"><span class="drop">"</span>Önceki mailimde de belirttiğim üzere…" cümlesini okuyunca içinden bir şey kopan herkes için yapıldı. Corporate BlaBla Decoder iki şeyi çok iyi yapar: gelen pasif-agresif iş mesajlarının altındaki <b>gerçeği</b> bıçak gibi çözer ve senin söylemek istediğini, "Nazik"ten "Patron modu"na kadar uzanan bir <b>ton kadranıyla</b> yeniden yazar. Her çıktı, ofis grubuna atılmaya hazır, anında tanınan bir kurumsal-memo kartına dönüşür.</p>
+
+  <p>Ama bu uygulamanın asıl meselesi "yapay zekâ mail yazıyor" değil. O her yerde var ve sıkıcı. Buradaki mesele <b>ton</b>: büyük platformların marka güvenliği yüzünden asla dokunamayacağı o ince, iğneleyici, "evet ya tam da bu" dedirten kurumsal pasif-agresiflik aralığı. Türkiye'de bunun bir adı bile var — <b>plaza dili</b> — ve zaten kanıtlanmış bir mizah türü. Ürün bu kültürel kancanın üstüne kuruluyor; teknoloji sadece taşıyıcı.</p>
+
+  <div class="callout">
+    <div class="lbl">Tek bakışta</div>
+    <table style="margin:6px 0 0">
+      <tr><td style="width:25%"><b>Ne çözüyor</b></td><td>Beyaz yakanın her gün yaşadığı kurumsal pasif-agresiflik gerilimini — hem anlama, hem karşılık verme tarafında.</td></tr>
+      <tr><td><b>Kanca</b></td><td>Kurumsal frustrasyon, beyaz yakanın ortak duygusal para birimi. Yerleşik ve viral bir mizah türü.</td></tr>
+      <tr><td><b>Viral motor</b></td><td>Yalnız tüketilir (yolda), ofis grubunda yayılır. Paylaşım ekstra bir adım değil — çıktının kendisi paylaşılmaya değer bir artefakt.</td></tr>
+      <tr><td><b>Moat</b></td><td>El küratörlü, transcreate edilmiş (çevrilmemiş) TR/EN ton kütüphanesi. Model herkeste aynı; ses sende.</td></tr>
+      <tr><td><b>İki pazar</b></td><td>TR: Corporate BlaBla Decoder · US: Per My Last Email. Tek kod tabanı, mağaza-seviyesinde lokalize isim.</td></tr>
+    </table>
+  </div>
+  <p>Aşağıdaki sayfalar üç soruya sırasıyla cevap verir: <b>Bu fikir hangi ihtiyaçtan doğdu? Ürün tam olarak ne yapıyor ve nasıl kullanılıyor? Neden yayılacak?</b> Önce hikâye, çünkü ürünün her tasarım kararı o hikâyeden çıkıyor.</p>
+</div>
+
+<!-- ============ HİKÂYE ============ -->
+<div class="section">
+  <h2>Hikâye: bu fikir hangi ihtiyaçtan doğdu</h2>
+
+  <h3>Başlangıç noktası: komütçünün gerçek günü</h3>
+  <p>Her şey basit bir soruyla başladı: her gün milyonlarca beyaz yakalının yaptığı o işe gidiş-geliş yolculuğunda, gerçekten viral olabilecek bir ihtiyaç var mı? Komütçünün gününe baktığımızda, temel fizyolojik ihtiyaçların (yemek, su) günün <i>yapısal</i> parçaları olduğunu görüyoruz — planlanmış öğle arası, çantadaki su şişesi. Bunlar metroda sıkışmış birinin <i>akut</i> günlük problemi değil. Komütçünün asıl mücadelesi fizyolojik değil, <b>psikolojiktir</b>.</p>
+  <p>Çünkü toplu taşıma insandan kontrolü alır. Treni hızlandıramazsın, gecikmeyi engelleyemezsin, yanında duran kişiyi seçemezsin. Bu yüzden komütçünün gerçek ihtiyaçları kontrolü geri kazanmaya yöneliktir. Üç katman çıkıyor karşımıza ve her biri ürünün neden böyle tasarlandığını açıklıyor.</p>
+  <p><b>Birincisi, kaçış (escapism).</b> En acil ve aktif günlük ihtiyaç bu. İnsan kendine dijital bir duyusal yalıtım baloncuğu kurmak ister — kulaklık, podcast, müzik, video. Beyni pasif, onarıcı bir moda geçirip yüksek-stresli iş ortamına girmeden önce kendini kaotik çevreden ayırır. <b>İkincisi, kompartmanlaşmış sosyallik.</b> Yolculuk sırasında konuşma arzusu neredeyse sıfırdır; etiket tam tersini dayatır — kalabalıkta zorunlu izolasyon. Sosyallik gün içinde şekil değiştirir: yolda dijital ve metin-tabanlıdır (hızlı WhatsApp/Slack), öğle ve mesai sonrasında ise <i>fiziksel</i> tepe yapar — çünkü o anlar kurumsal frustrasyonu boşaltma, "çalışan personasından" çıkma valfidir. <b>Üçüncüsü, başa çıkma stratejileri.</b> İnsanlar ya aktif sınır yönetimi yapar (sabah yolculuğunu nazikçe "iş moduna" geçmek için kullanmak), ya da duyusal kapama yapar (gürültü engelleme, sürükleyici medya, hiper-odaklı mobil oyun ile fiziksel gerçekliği tamamen kapatmak).</p>
+
+  <h3>İlk hipotez ve neden yanlış olduğu</h3>
+  <p>İlk cazip cevap şuydu: komütçünün en yüksek kaldıraçlı ihtiyacı <b>"çalınan zamanın geri kazanımı"</b> — ölü, stresli yolculuk penceresini ya üretken bir başlangıca ya da onarıcı bir sığınağa çevirmek. Kulağa saygın geliyor. Ama burada taşıyıcı bir hata var, ve o hatayı düzeltince asıl viral fikir kendiliğinden ortaya çıkıyor.</p>
+  <p>Kötü haber şu: <b>verimlilik, bu listenin en saygın ama en az viral ihtiyacı.</b> Productivity'nin koca bir mezarlığı var — Blinkist, sayısız mikro-öğrenme ve haber-özeti uygulaması. Hepsi insanların <i>söylediği</i> tercihe oynar: "keşke yolda bir şeyler öğrensem." Ama <i>açığa çıkan</i> tercih (revealed preference) bambaşkadır — adam metroda TikTok kaydırır, müzik dinler, kafasını boşaltır. Çünkü öğrenmek efor ister, viral döngüler ise efor düşmanıdır. Productivity aspirasyoneldir; <b>viralite duygusaldır.</b> Birini paylaşırsın, diğerini paylaşmazsın. Yani "çalınan zamanın geri kazanımı" iyi retention'lı, abonelik satabilen ama K-faktörü düşük bir kategori. Para kazandırır belki, ama yayılmaz.</p>
+
+  <h3>Asıl mekanik çelişki — ve içinde saklı çözüm</h3>
+  <p>Komütçü analizinin kendi içinde bir çelişki var: yolculuk <b>anti-sosyaldir</b>, etiket sessizliği dayatır, izolasyon zorunludur. Ama viralite <b>yayılma</b>, yani sosyallik demektir. Bu ikisi doğrudan çelişir. Çözüm şu: ürün commute'ta <b>tek başına tüketilir</b>, ama commute'un <b>dışında</b> yayılır. Wordle'ın dehası tam buydu — oyunu yalnız oynarsın, o yeşil-sarı kareli sonucu ofiste, WhatsApp grubunda, Twitter'da paylaşırsın. İki ayrı kanal: <b>commute = tüketim penceresi</b>, <b>ofis mutfağı / grup / LinkedIn = yayılma penceresi.</b> Çoğu uygulama bu iki kanalı köprülemeyi beceremediği için ölür. Bizim ürünümüzün her tasarım kararı bu köprüyü kurmaya hizmet ediyor.</p>
+
+  <h3>Asıl yakıt: kurumsal frustrasyon</h3>
+  <p>Geriye tek soru kalıyor: yalnız tüketilip sonra yayılacak <b>yakıt</b> ne olacak? Cevap, beyaz yakanın her gün paylaştığı tek ortak duygu: <b>kurumsal frustrasyon.</b> "Severance" dizisinin, r/antiwork'ün, "corporate girlie" TikTok'unun, LinkedIn cringe hesaplarının, "per my last email" mizahının viralitesi hep buradan gelir. Ve commute, insanın çalışan personasından <i>çıkış ve giriş</i> anı olduğu için, bu tür içerik için mükemmel penceredir. Decompression içeriği, productivity içeriğini her gün döver.</p>
+
+  <h3>Türkiye kozu: plaza dili</h3>
+  <p>Generic İngilizce bir "kurumsal mizah" uygulaması hâlâ zayıf olurdu. Ama elimizde büyük platformların asla dokunamayacağı bir koz var: <b>plaza Türkçesi.</b> Gmail "Help me write", Apple Intelligence, Grammarly — hepsi marka güvenliği yüzünden herkesi bej bir kurumsal drone'a çevirmek zorunda. Bütün mesele zaten bu: bizim avantajımız, büyük oyuncuların asla yapamayacağı <i>tonal aralık.</i> Ve Türkiye'de bu zaten kanıtlanmış bir mizah türü. Plaza dilinin kanonik cümleleri herkesin ortak hafızasında:</p>
+  <div class="note">
+    "Önceki mailimde de belirttiğim üzere…" <span class="muted">(= okumadın mı?)</span> &nbsp;·&nbsp;
+    "Nazikçe hatırlatmak isterim ki…" <span class="muted">(= sen bunu yapmadın)</span> &nbsp;·&nbsp;
+    "Bilginize sunarım" <span class="muted">(= kanıt bırakıyorum)</span> &nbsp;·&nbsp;
+    "Görünürlük açısından loop'a alıyorum" <span class="muted">(= seni şikâyet ediyorum)</span> &nbsp;·&nbsp;
+    "Rica etsem bi bakabilir misin" <span class="muted">(= yap)</span> &nbsp;·&nbsp;
+    "Müsait olduğunda" <span class="muted">(= şimdi)</span>
+  </div>
+  <p>Bu hem büyük platformların tonlama olarak <i>yakalayamayacağı</i> bir şey, hem zaten viralitesi kanıtlanmış bir meme genre, hem de kör gözle bilinen bir pazar. Generic versiyon "güzel bir araç"; plaza Türkçesi versiyonu gerçek bir kültürel kanca. Fikri asıl güçlü kılan, İngilizce hali değil, bu lokalize hali.</p>
+
+  <h3>Gizlilik gerilimi ve onu çözen iki mod</h3>
+  <p>Viral döngü "screenshot paylaşımı" üstüne kurulu. Ama burada ölümcül bir gerilim var: <b>kimse gerçek, gizli bir iş mailinin screenshot'ını gruba atmaz.</b> İçinde isim var, proje var, NDA var. Yani ürünün <i>en özel</i> anı (gerçek mailimi çevir) ile <i>viral</i> anı (bunu herkese göster) doğrudan çelişiyor. Bu çözülmezse ürün yine düşük K-faktörlü bir araca dönüşür.</p>
+  <p>Çözüm, "çeviri" eylemini iki ayrı moda bölmek. <b>Özel mod (utility, retention):</b> gerçek mailimi yapıştırırım, çevirisini alırım, kopyalayıp kendi mailime götürürüm. Bu mod asla paylaşılmaz, cihazda kalır, gizlilik riski sıfırdır — insanı geri getiren şey budur. <b>Oyun modu / Günlük ritüel (viral):</b> burada gerçek mail yok; herkesin yaşadığı generic kurumsal durumlar var. "Loop'a alıyorum"u herkes yaşar; paylaşılan şeyde kimsenin sırrı yoktur. Viralite buradan gelir, gizlilik problemi buharlaşır. <b>Generic-relatable, specific-secret değil</b> — TikTok/LinkedIn'deki kurumsal mizahın neden viral olduğunun tam sebebi bu. İki mod birbirini besler: oyun modu kullanıcıyı getirir ve yayar, özel mod onu tutar ve paraya çevirir.</p>
+</div>
+
+<!-- ============ PERSONA ============ -->
+<div class="section avoid">
+  <h3>Persona: Beyza'nın bir günü</h3>
+  <div class="twocol">
+    <div class="txt">
+      <p style="margin-top:0">Beyza 29 yaşında, bir plazada kıdemli uzman. Her sabah M4 hattının 08:15 servisinde, aynı yüzlerce yabancıyla, hiç konuşmadan yan yana. Telefonunda kafasını boşaltacak bir şey arıyor — TikTok'u kaydırırken bir bildirim düşüyor: <b>Günün Plaza tuzağı hazır.</b> Çözüyor, gülümsüyor, zincirini bir gün daha uzatıyor. Servisten inmeden o kartı iş arkadaşlarının olduğu gruba atıyor; üç dakika içinde dört "😂" geliyor.</p>
+      <p>Öğleden sonra patronundan bir mail: "<i>Görünürlük açısından [Yönetici]'yi de loop'a alıyorum.</i>" İçi gidiyor. Bu maili birine gösterip "buna inanabiliyor musun" demek istiyor — ama gerçek maili (isim, proje, NDA) kimseye atamaz. <b>Decoder'a yapıştırıyor.</b> Çeviri çıkıyor: "Bu işi yapmadın, artık patronun da biliyor, iyi şanslar." Metre 96, nükleer. Paylaştığı kart generic — kimsenin sırrı yok, ama herkes tanıyor.</p>
+      <p>Cevap yazması lazım ama profesyonel kalmalı. <b>Composer'a</b> niyetini yazıyor: "bunu ben yapmadım, haksızsın." Ton kadranını "Cerrahi"ye çekiyor, çıkan metni kopyalıyor — bu mod paylaşılmaz, cihazda kalır. Cuma günü Haftalık Karne'si geliyor: "Bu hafta 11 mail çözdün, en sık tuzak: 'rica etsem'." Onu da grupta paylaşıyor. İki ay sonra uygulama, patronunun tonunu öğrendiği için Beyza'nın vazgeçmesi artık zor.</p>
+    </div>
+    <div class="shot" style="flex:0 0 168px">
+      <div style="background:var(--card);border:0.6px solid var(--line);border-radius:12px;padding:16px;text-align:center">
+        <div style="width:58px;height:58px;border-radius:50%;background:#D8A7A0;margin:0 auto 10px"></div>
+        <div class="serif" style="font-size:14pt;color:var(--ink)">Beyza, 29</div>
+        <div class="muted" style="font-size:8.8pt;margin-top:2px">Kıdemli uzman · plaza<br>M4 hattı · 08:15 servisi</div>
+        <div style="height:0.6px;background:var(--line2);margin:12px 0"></div>
+        <div style="text-align:left;font-size:8.6pt;color:var(--soft);line-height:1.7">
+          <div><b style="color:var(--ink)">İhtiyaç:</b> anlamak + karşılık vermek, ama sır vermeden paylaşmak.</div>
+          <div style="margin-top:6px"><b style="color:var(--ink)">Çözüm:</b> generic-relatable artefakt + cihazda kalan özel mod.</div>
+        </div>
+      </div>
+      <div class="figcap">Hedef persona</div>
+    </div>
+  </div>
+  <p class="note">Beyza'nın günü tesadüfen kurgulanmadı: her dokunuş ürünün dört ayaklı retention modeline denk geliyor — <b>Plaza + streak</b> onu getiriyor, <b>Karne</b> geri çağırıyor, <b>Ton Hafızası</b> tutuyor, <b>Decoder/Composer</b> ihtiyaç anında parlıyor.</p>
+</div>
+
+<!-- ============ ÜRÜN: MODÜLLER ============ -->
+<div class="pb section">
+  <h2 style="margin-top:0">Ürün ne yapıyor — modüller ve kullanım</h2>
+  <p>Uygulama dört sekmeden oluşur: <b>Günlük</b>, <b>Decoder</b>, <b>Composer</b>, <b>Profil</b>. Aşağıda her modülün ne yaptığını, nasıl kullanıldığını ve ekranda neyin nasıl göründüğünü tek tek anlatıyorum. Tüm ekranlar gerçek uygulama tasarımıdır.</p>
+
+  <!-- DECODER -->
+  <h3>1 · Decoder — "bu mail aslında ne diyor"</h3>
+  <div class="twocol">
+    <div class="txt">
+      <p style="margin-top:0"><b>Ne yapar:</b> Gelen pasif-agresif bir metni alır, altındaki gerçeği düz Türkçeye çevirir. Üç çıktı üretir: <b>Tercüme</b> (açıklama değil, teşhis — kısa ve bıçak gibi), <b>Pasif-agresiflik metresi</b> (0–100), ve <b>tespit edilen tuzaklar</b> (her kurumsal ifadenin gerçek anlamı, çip olarak).</p>
+      <p><b>Nasıl kullanılır:</b> Maili kopyalayıp metin alanına yapıştırırsın, <i>Çöz</i>'e basarsın. Saniyeler içinde kart açılır, üstüne eğik bir <b>ÇÖZÜLDÜ</b> kauçuk damgası düşer. Sağ üstteki saat ikonundan geçmiş çözümlerine (Arşiv) ulaşırsın.</p>
+      <p>Metrenin karakteri kasıtlı kalibre edildi — mizah abartıdan değil, <i>fazla doğru olmaktan</i> gelir. Dört bant var:</p>
+      <div class="pill-row">
+        <span class="pill">0–30 masum</span><span class="pill">31–60 sinsi</span>
+        <span class="pill">61–85 kanıt-bırakan</span><span class="pill">86–100 nükleer</span>
+      </div>
+      <p style="margin-top:10px"><b>Premium "savunma önerisi":</b> Köşe Ofis abonesiyse, kartın altında "bu maile nasıl cevap verirsin" önerisi de açılır. Ücretsiz kullanıcı bunun kilitli teaser'ını görür — doğal bir paywall anı.</p>
+      <div class="ex">
+        <div class="in">Gelen: "Müsait olduğunda bir bakabilir misin? Acelesi yok."</div>
+        <div class="out">→ Şu an bak. "Acelesi yok" cümlenin en agresif kısmı. <b style="color:var(--red)">Metre 64</b></div>
+      </div>
+    </div>
+    <div class="shot"><div class="wrap-ph" style="width:232px"><div class="phone"><div class="screen">
+      <div class="hdr"><div class="brand"><div class="bmk"><span>cb</span></div><span class="bname">Corporate BlaBla Decoder</span></div><svg class="i sm" style="color:var(--muted)"><use href="#hist"/></svg></div>
+      <div class="pad"><div class="lbl">Gelen mesaj</div><div class="ip">"Görünürlük açısından [Yönetici]'yi de loop'a alıyorum."</div></div>
+      <div class="pad" style="margin-top:9px"><div class="bd">Çöz</div></div>
+      <div class="pad" style="margin-top:11px"><div class="pcard"><div class="stamp">ÇÖZÜLDÜ</div>
+        <div style="font-size:8px;letter-spacing:1.4px;color:var(--red);text-transform:uppercase;margin-bottom:5px">Tercüme</div>
+        <div class="serif" style="font-size:14px;line-height:1.35;color:var(--ink)">Bu işi yapmadın. Artık patronun da biliyor. İyi şanslar.</div>
+        <div style="height:.5px;background:var(--line2);margin:10px 0"></div>
+        <div style="display:flex;align-items:center;gap:7px"><span style="font-size:7px;color:var(--soft);text-transform:uppercase">Pasif-ag.</span><div class="bar" style="flex:1"><i style="width:96%"></i></div><span class="serif" style="font-size:13px;color:var(--red)">96</span></div>
+        <div style="display:flex;gap:4px;margin-top:9px;flex-wrap:wrap"><span class="chip2">görünürlük = şikayet</span><span class="chip2">loop = tanık</span></div></div></div>
+      <div class="pad" style="margin-top:10px"><div class="br"><svg class="i sm"><use href="#share"/></svg> Sonucu paylaş</div></div>
+      <div class="tabs"><div class="tab"><svg class="i"><use href="#cal"/></svg></div><div class="tab on"><svg class="i"><use href="#mail"/></svg><div>Decoder</div></div><div class="tab"><svg class="i"><use href="#pencil"/></svg></div><div class="tab"><svg class="i"><use href="#user"/></svg></div></div>
+    </div></div><div class="cap">Decoder — tercüme + metre + tuzaklar</div></div></div>
+  </div>
+
+  <!-- COMPOSER -->
+  <h3>2 · Composer — Ton Kadranı (uygulamanın imza etkileşimi)</h3>
+  <div class="twocol">
+    <div class="shot"><div class="wrap-ph" style="width:232px"><div class="phone"><div class="screen dark">
+      <div class="hdr"><div class="brand"><div class="bmk" style="border-color:var(--dred)"><span style="color:var(--dred)">cb</span></div><span class="bname">Corporate BlaBla Decoder</span></div><svg class="i sm" style="color:#6B6358"><use href="#hist"/></svg></div>
+      <div class="pad"><div class="lbl" style="color:#8A8276">Niyetin</div><div class="ip">"Bu iş benim değil, senin işin, üstüme yıkma."</div></div>
+      <div class="pad" style="margin-top:14px"><div class="lbl" style="color:#8A8276">Ton Kadranı</div>
+        <div style="position:relative;height:38px;margin-top:12px">
+          <div style="position:absolute;top:7px;left:6px;right:6px;height:2px;background:var(--dline)"></div>
+          <div style="position:absolute;top:7px;left:6px;right:33%;height:2px;background:var(--dred)"></div>
+          <div style="position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between">
+            <div style="text-align:center;width:25%"><div class="dot" style="margin:2px auto 0"></div><div style="font-size:8px;color:#8A8276;margin-top:6px">Nazik</div></div>
+            <div style="text-align:center;width:25%"><div class="dot" style="margin:2px auto 0"></div><div style="font-size:8px;color:#8A8276;margin-top:6px">Mesafeli</div></div>
+            <div style="text-align:center;width:25%"><div class="dot" style="margin:2px auto 0"></div><div style="font-size:8px;color:#8A8276;margin-top:6px">Cerrahi</div></div>
+            <div style="text-align:center;width:25%"><div style="width:18px;height:18px;border-radius:50%;background:var(--dred);border:3px solid var(--dbg);box-shadow:0 0 0 1.5px var(--dred);margin:-1px auto 0"></div><div style="font-size:9px;color:var(--dred);margin-top:4px">Patron</div></div>
+          </div></div></div>
+      <div class="pad" style="margin-top:6px"><div class="pcard"><div style="display:inline-block;background:var(--drwash);color:var(--drtext);font-size:8px;letter-spacing:.5px;padding:2px 7px;border-radius:4px;text-transform:uppercase">Patron modu</div><div class="serif" style="margin-top:8px;font-size:14px;line-height:1.45;color:var(--dtext)">"Bu senin işin. Cuma EOD'a bekliyorum."</div></div></div>
+      <div class="pad" style="margin-top:10px;display:flex;gap:7px"><div style="flex:1;background:#F0EBE0;color:#1B1916;text-align:center;font-size:11px;padding:8px 0;border-radius:7px">Kopyala</div><div style="width:40px;background:var(--dred);border-radius:7px;display:flex;align-items:center;justify-content:center"><svg class="i sm" style="color:#1B1916"><use href="#share"/></svg></div></div>
+      <div class="tabs"><div class="tab"><svg class="i"><use href="#cal"/></svg></div><div class="tab"><svg class="i"><use href="#mail"/></svg></div><div class="tab on" style="color:var(--dred)"><svg class="i"><use href="#pencil"/></svg><div>Composer</div></div><div class="tab"><svg class="i"><use href="#user"/></svg></div></div>
+    </div></div><div class="cap">Composer — karanlık mod, "Patron" tonu</div></div></div>
+    <div class="txt">
+      <p style="margin-top:0"><b>Ne yapar:</b> Söylemek istediğin ham niyeti yazarsın; uygulama onu dört kurumsal tonda yeniden yazar. Bu modun kalbi <b>Ton Kadranı</b> — uygulamanın "wow" anı. Parmağınla "Nazik → Profesyonel-mesafeli → Cerrahi pasif-agresif → Patron modu" arasında gezinirsin; metin canlı değişir, her durakta hafif bir <b>haptik tıkırtı</b> gelir.</p>
+      <p><b>Nasıl kullanılır:</b> Niyetini yaz, <i>Çevir</i>'e bas. Dört ton <b>tek çağrıda</b> geldiği için kadran kayarken sıfır gecikme, sıfır ekstra maliyet olur. İstediğin tonda durunca <b>Kopyala</b> (özel mod — cihazda kalır, paylaşılmaz) ya da <b>Paylaş</b> (kart üretir) seçersin.</p>
+      <p>Dört tonun karakteri bilinçli: Patron modu <i>kısa ve emir kipli</i>, Nazik mod <i>emoji'li ve "buradayım"cı</i>. Tonların <b>uzunluğu bile</b> karakter taşır — kadranı çevirmek görsel olarak da bir kişilik değişimi gibi hissettirir. Premium tonlar (Cerrahi + Patron) ücretsiz kullanıcıda kilit ikonuyla görünür; o tona kayınca paywall açılır.</p>
+      <div class="ex">
+        <div class="in">Niyet: "Üçüncü kez geç teslim ettin, bıktım, ama profesyonel kalmalıyım."</div>
+        <div class="out" style="font-size:9.4pt"><b>Nazik:</b> "Teslimi aldım, eline sağlık! Bir sonrakinde tarihte buluşabilirsek süper olur."<br><b>Cerrahi:</b> "Teslim için teşekkürler 🙂 Son üç teslimde küçük kaymalar oldu, not düşeyim dedim."<br><b>Patron:</b> "Üçüncü gecikme. Bir dahakine tarih sabit."</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- GÜNLÜK PLAZA -->
+<div class="section">
+  <h3>3 · Günlük Plaza — günlük ritüel ve alışkanlık motoru</h3>
+  <div class="twocol">
+    <div class="txt">
+      <p style="margin-top:0"><b>Ne yapar:</b> Uygulamayı açınca seni bu karşılar. Günde tek, scarcity'li bir kart — Wordle gibi gün değişince yenisi gelir. Bu, kullanıcıyı her gün geri getiren <b>alışkanlık motorudur</b>; episodik araçların (Decoder/Composer) "top of mind" kalmasını sağlayan şey budur.</p>
+      <p><b>Formatlar rotasyonda:</b> <i>Bugünün Tuzağı</i> (tahmin et, kart açılsın), <i>Plaza Burcu</i> ("bugün yükselen burcun 'Rica Etsem'"), <i>Toplantı Bingo</i> (tut-paylaş 3×3 kare), <i>Çeviri Bilmecesi</i> ("'EOD'a dönerim' ne demek?"). Çeşitlilik, ritüelin bayatlamasını önler.</p>
+      <p><b>Nasıl kullanılır:</b> Kartı çöz/tut, sağ üstteki <b>alev + gün sayacı</b> ile streak'ini görürsün; bir alttaki "yeni tuzak 13:28" sayacı bir sonrakini bekletir. Hemen altında moderasyonsuz topluluk sıcaklığı: "<b>9.871 kişi</b> de aynı tuzağa düştü" — yalnız tüketiyorsun ama yalnız olmadığını hissediyorsun, sıfır içerik riskiyle. Kırmızı <b>Sonucu paylaş</b> butonu kartın üstünde.</p>
+      <p class="note" style="margin-bottom:0">Maliyet notu: Günlük Plaza kartları canlı API'ye bağlı değildir. Claude ile aylık batch üretilip Firestore'a yazılır; uygulama yalnızca günün kartını çeker. Bu hem ucuz hem tutarlı.</p>
+    </div>
+    <div class="shot"><div class="wrap-ph" style="width:232px"><div class="phone"><div class="screen">
+      <div class="hdr"><div class="brand"><div class="bmk"><span>cb</span></div><span class="bname">Corporate BlaBla Decoder</span></div><div class="fire"><svg class="i sm" style="color:var(--red)"><use href="#flame"/></svg>12</div></div>
+      <div class="pad" style="display:flex;justify-content:space-between;align-items:center"><span class="lbl">Günün Plazası</span><span class="muted" style="font-size:9px"><svg class="i sm"><use href="#clock"/></svg> 13:28</span></div>
+      <div class="pad" style="margin-top:10px"><div class="pcard"><div class="stamp">ÇÖZÜLDÜ</div><div class="lbl" style="margin-bottom:8px">Toplantı Bingo</div>
+        <div style="display:flex;flex-direction:column;gap:5px">
+          <div style="display:flex;gap:5px"><div class="bingo">duyuyor musunuz?</div><div class="bingo">ekranı paylaşamayan</div><div class="bingo">mute açık unutan</div></div>
+          <div style="display:flex;gap:5px"><div class="bingo">kamerası kapalı</div><div class="bingo" style="background:var(--rwash);color:var(--rtext)">ben sonra yazarım</div><div class="bingo">bağlantı koptu</div></div>
+          <div style="display:flex;gap:5px"><div class="bingo">geç katılan</div><div class="bingo">sunum donduran</div><div class="bingo">özetler misin?</div></div>
+        </div></div></div>
+      <div class="pad" style="margin-top:10px;display:flex;align-items:center;gap:8px"><div style="display:flex"><div style="width:18px;height:18px;border-radius:50%;background:#D8A7A0;border:1.5px solid var(--paper)"></div><div style="width:18px;height:18px;border-radius:50%;background:#C9BFAD;border:1.5px solid var(--paper);margin-left:-6px"></div><div style="width:18px;height:18px;border-radius:50%;background:#B6A98F;border:1.5px solid var(--paper);margin-left:-6px"></div></div><span class="muted" style="font-size:9px">Bugün <b style="color:var(--ink)">9.871</b> kişi de buradaydı.</span></div>
+      <div class="pad" style="margin-top:10px"><div class="br"><svg class="i sm"><use href="#share"/></svg> Sonucu paylaş</div></div>
+      <div class="tabs"><div class="tab on"><svg class="i"><use href="#cal"/></svg><div>Günlük</div></div><div class="tab"><svg class="i"><use href="#mail"/></svg></div><div class="tab"><svg class="i"><use href="#pencil"/></svg></div><div class="tab"><svg class="i"><use href="#user"/></svg></div></div>
+    </div></div><div class="cap">Günlük Plaza — Bingo + streak + sosyal kanıt</div></div></div>
+  </div>
+</div>
+
+<!-- PAYLAŞIM KARTI -->
+<div class="section">
+  <h3>4 · Paylaşım Kartı — viral motorun kendisi</h3>
+  <div class="twocol">
+    <div class="txt">
+      <p style="margin-top:0"><b>Ne yapar:</b> Her çıktı — Decoder, Composer, Plaza, Karne — otomatik tasarlanmış, watermark'lı, baskıya hazır bir görsel artefakta dönüşür. Paylaşım ekstra bir adım değildir; <b>çıktının kendisi</b> paylaşılmaya can atan bir nesnedir. Bu, Wordle'ın yeşil-sarı karesiyle aynı mantık.</p>
+      <p><b>Görsel kimlik:</b> "Damgalı kurumsal memo" şablonu. Kâğıt zemin, eğik ÇÖZÜLDÜ damgası, tek kırmızı aksan, altta marka kilidi. Biri WhatsApp grubunda bunu görünce markayı tanır — <b>tanınırlık, viral varlığın kendisidir.</b> Kart, açık ve karanlık temada bile <i>kasıtlı olarak kâğıt kalır</i>, çünkü marka odur.</p>
+      <p><b>Nasıl kullanılır:</b> Herhangi bir sonuç ekranında "Sonucu paylaş" → tek tıkla Story / WhatsApp / kopyala. Kartın altındaki <b>karekod</b> viral döngüyü kapatır: kartı gören kişi tarayıp doğrudan store'a gider. Paylaşımdan kuruluma sıfır sürtünme.</p>
+      <p class="note" style="margin-bottom:0">Watermark, premium kullanıcıda bile <b>bilerek</b> kalır — çünkü o, ücretsiz pazarlama bütçendir. Viraliteyi besleyen her şey (paylaşım, Plaza, watermark) ücretsizdir.</p>
+    </div>
+    <div class="shot figure">
+      <div style="width:212px;margin:0 auto;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:16px;position:relative">
+        <div class="stamp" style="top:12px;right:11px;font-size:9px">ÇÖZÜLDÜ</div>
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:11px"><div style="width:17px;height:17px;border:1.4px solid var(--ink);border-radius:3px;display:flex;align-items:center;justify-content:center"><span class="serif" style="font-size:10px">cb</span></div><span style="font-size:8px;letter-spacing:2px;color:var(--soft);text-transform:uppercase">Gelen mesaj</span></div>
+        <div style="font-size:12px;color:var(--ink);line-height:1.5">"Görünürlük açısından [Yönetici]'yi de loop'a alıyorum."</div>
+        <div style="height:1px;background:var(--line2);margin:12px 0"></div>
+        <div style="font-size:8px;letter-spacing:2px;color:var(--red);text-transform:uppercase;margin-bottom:5px">Tercüme</div>
+        <div class="serif" style="font-size:15px;line-height:1.4;color:var(--ink)">Bu işi yapmadın. Artık patronun da biliyor. İyi şanslar.</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-top:14px"><span style="font-size:7px;color:var(--soft);text-transform:uppercase">Pasif-ag.</span><div class="bar" style="flex:1"><i style="width:96%"></i></div><span class="serif" style="color:var(--red)">96</span></div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-top:14px;padding-top:11px;border-top:1px solid var(--line2)">
+          <div><div class="serif" style="font-size:11px;letter-spacing:1px;color:var(--red)">corporate blabla</div><div style="font-size:7px;color:var(--muted);margin-top:2px">corporateblabla.app</div></div>
+          <div style="width:34px;height:34px;border:2px solid var(--ink);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:7px;color:var(--soft)">QR</div>
+        </div>
+      </div>
+      <div class="figcap">Paylaşım kartı — "stamped memo" + karekod</div>
+    </div>
+  </div>
+
+  <h3>5 · Ton Hafızası — kişiselleşen lock-in (premium)</h3>
+  <p><b>Ne yapar:</b> Uygulama zamanla <i>senin</i> kurumsal sesini ve sık yazıştığın kişilerin tonunu öğrenir. "Patronunu tanıt": birkaç örnek mailini verirsin, app o personanın register'ını (formalite, doğrudanlık, idiomlar) öğrenir ve Composer çıktısını ona göre modüle eder — örnekleri asla aynen kopyalamadan. Bu günlük çekim yaratmaz ama güçlü bir <b>switching cost</b> yaratır: iki ay sonra uygulama senin imzanı, patronunun tonunu biliyordur; rakibe geçmek sıfırdan başlamak demektir. Premium'un asıl kancası budur.</p>
+  <p><b>Gizlilik:</b> Eğittiğin personalar ve verdiğin örnek mailler cihazda (yerel) saklanır; sunucu yalnızca o anki çağrıyı görür, hiçbir şeyi kalıcı tutmaz.</p>
+
+  <h3>6 · Arşiv ve Haftalık Karne</h3>
+  <p><b>Arşiv:</b> Geçmiş çözümlerin ve yazımların cihazında birikir — "kurumsal hayatta kalma" kaydın. "Altın anlar" koleksiyonu yapabilirsin. <b>Haftalık Karne (Pasif-Agresiflik Karnesi):</b> haftada bir, pazartesi sabahı gelen gamified öz-bilgi — "Bu hafta 11 mail çözdün, en sık karşına çıkan tuzak 'rica etsem', ortalama maruz kaldığın pasif-agresiflik %62." Bu hem haftalık bir push sebebi (geri çağırma motoru) hem de paylaşılabilir bir özet (Spotify Wrapped'in mikro-versiyonu). İnsanlar kendi istatistiklerine bayılır.</p>
+</div>
+
+<!-- ============ RETENTION ============ -->
+<div class="pb section">
+  <h2 style="margin-top:0">Dört ayaklı retention modeli</h2>
+  <p>Bu ürünün en kritik tasarım kararı şuydu: tek bir "retention" aramak hataydı. Decoder/Composer'ın doğal bir "novelty cliff"i var — insan birkaç kez dener, güler, paylaşır, sonra unutabilir. Bu yüzden retention'ı üç (artı bir) ayrı katmana böldük; birini diğerinin işini yapmaya zorlamak masayı çökertir.</p>
+  <table>
+    <thead><tr><th style="width:22%">Katman</th><th style="width:24%">Mekanik</th><th>Görevi ve neden böyle</th></tr></thead>
+    <tbody>
+      <tr><td><b>Günlük Plaza</b> + streak</td><td>Ritüel (habit)</td><td>Seni her gün geri getiren motor. Wordle scarcity'si + zincir. Composer'ın yapamadığı "günlük açtırma" işini bu yapar.</td></tr>
+      <tr><td><b>Haftalık Karne</b></td><td>Geri çağırma</td><td>Streak tek başına zayıf; Karne haftalık bir push sebebi ve paylaşılabilir öz-bilgi ekler.</td></tr>
+      <tr><td><b>Ton Hafızası</b></td><td>Lock-in</td><td>Zamanla biriken kişiselleşme = switching cost. Premium'un asıl kancası.</td></tr>
+      <tr><td><b>Decoder / Composer</b></td><td>Episodik utility</td><td>Hesap makinesi gibi — ihtiyaç anında parlar. Görevi günlük açılma değil, "top of mind" kalmak.</td></tr>
+    </tbody>
+  </table>
+  <p>Özet: <b>Plaza + streak</b> seni getirir, <b>Karne</b> seni geri çağırır, <b>Ton Hafızası</b> seni tutar, <b>Composer/Decoder</b> ihtiyaç anında parlar. Dört ayaklı masa — tek ayağa yüklenmiyoruz. Ek olarak, her Plaza kartının altındaki agregat sayaç ("9.871 kişi bugün burada") moderasyon kâbusuna girmeden topluluk sıcaklığı verir.</p>
+
+  <h2>Tasarım dili: editöryel minimalizm + resmi belge motifi</h2>
+  <p>Tek bir estetik karar verdik ve buna net commit ettik: <b>uygulamanın kendisi sakin</b> (bol beyaz alan, mesafeli, premium); <b>paylaşım kartları yüksek sesli</b> (gizli kurumsal not / damgalı memo kimliği). Bu kontrast bilinçli: her gün kullandığın araç huzur versin, dışarı çıkan artefakt dikkat çeksin. <b>Mavi yok</b> — Outlook/LinkedIn'e benzemekten kasıtlı kaçındık; onları taklit etmiyoruz, onlarla dalga geçiyoruz.</p>
+  <div class="sw-row">
+    <div class="sw"><div class="chip" style="background:#F4F1EA"></div><div class="nm">Kâğıt</div><div class="hex">#F4F1EA</div></div>
+    <div class="sw"><div class="chip" style="background:#EDE7DA"></div><div class="nm">Yüzey</div><div class="hex">#EDE7DA</div></div>
+    <div class="sw"><div class="chip" style="background:#1A1714"></div><div class="nm">Mürekkep</div><div class="hex">#1A1714</div></div>
+    <div class="sw"><div class="chip" style="background:#BC3B2E"></div><div class="nm">Damga kırmızısı</div><div class="hex">#BC3B2E</div></div>
+    <div class="sw"><div class="chip" style="background:#6B6358"></div><div class="nm">Yumuşak</div><div class="hex">#6B6358</div></div>
+    <div class="sw"><div class="chip" style="background:#1B1916"></div><div class="nm">Dark zemin</div><div class="hex">#1B1916</div></div>
+  </div>
+  <p>Tipografide başlıklarda yüksek-kontrast editöryel serif (Fraunces), gövdede temiz sans (Inter) kullanılır — kontrast, karakterin kendisidir. Redaksiyon barları ve kauçuk damga motifi, ürünün "deşifre/gizli belge" temasını doğrudan görsele taşır. Karanlık modda aynı kâğıt-kimliği füme zemin + krem mürekkeple korunur; ama paylaşım kartı her iki modda da kâğıt kalır.</p>
+</div>
+
+<!-- ============ AKIŞ ============ -->
+<div class="pb section">
+  <h2 style="margin-top:0">Baştan sona kullanım akışı</h2>
+  <p>Aşağıda kullanıcının ilk açılıştan aboneliğe kadar izlediği yol, ekranlarıyla anlatılıyor. Tasarım ilkesi: <b>sürtünme viralitenin düşmanıdır</b>, o yüzden hiçbir yerde gereksiz adım yok.</p>
+
+  <div class="twocol">
+    <div class="shot"><div class="wrap-ph" style="width:218px"><div class="phone"><div class="screen" style="padding:24px 16px;height:470px">
+      <div style="display:flex;gap:5px;margin-bottom:26px"><div style="width:20px;height:4px;border-radius:2px;background:var(--red)"></div><div style="width:20px;height:4px;border-radius:2px;background:var(--red)"></div><div style="width:20px;height:4px;border-radius:2px;background:var(--line)"></div></div>
+      <div class="serif" style="font-size:22px;color:var(--ink)">Yol saatlerin?</div>
+      <div class="lbl" style="margin-top:22px">Sabah</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"><span class="tchip">07:30</span><span class="tchip">08:00</span><span class="tchip on">08:15</span><span class="tchip">08:30</span></div>
+      <div class="lbl" style="margin-top:20px">Akşam</div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:8px"><span class="tchip">17:30</span><span class="tchip">18:00</span><span class="tchip on">18:30</span></div>
+      <div style="margin-top:auto"><div class="bd" style="padding:11px 0;font-size:12px">Devam</div></div>
+    </div></div><div class="cap">Adım 1 · Onboarding</div></div></div>
+    <div class="txt">
+      <h3 style="margin-top:0">Adım 1 — Onboarding (sürtünmesiz, hesapsız)</h3>
+      <p>İlk açılışta hesap zorlaması yoktur; uygulama anonim başlar. Arka planda anonim bir cihaz kimliği oluşur — kim olduğunu bilmeyiz, hiçbir kişisel veri istenmez. Toplam iki ekran.</p>
+      <p>Tek anlamlı soru sorulur: <b>yol saatlerin.</b> Çünkü bu bir komütçü uygulaması ve tüm bildirimleri commute penceresine kilitliyoruz. Sabah seçimi work-mode'a giriş anını (~08:15), akşam seçimi decompression anını (~18:30) belirler. Bu saatler daha sonra Profil'den değiştirilebilir.</p>
+      <p>Onboarding biter bitmez kullanıcı doğrudan <b>Günlük Plaza</b> ile karşılaşır — yani daha ilk saniyede ürünün viral ritüelini görür, paylaş butonu hemen oradadır.</p>
+    </div>
+  </div>
+
+  <div class="twocol" style="margin-top:16px">
+    <div class="txt">
+      <h3 style="margin-top:0">Adım 2 — Günlük açılış ve utility</h3>
+      <p>Açılışta Günlük Plaza karşılar (yukarıda detaylı anlatıldı): kullanıcı kartı çözer, streak'ini görür, isterse paylaşır. Buradan alt sekmelerle <b>Decoder</b> ve <b>Composer</b> arasında geçer — ihtiyaç anında. Her sonuç ekranında "Sonucu paylaş" hazırdır; yani uygulamada hiçbir noktada "paylaşmak için ayrı efor" yoktur.</p>
+      <p>Ücretsiz kullanıcı günde 3 çözüm + 3 yazım hakkına ve iki temel tona (Nazik, Mesafeli) sahiptir. Premium tonlar ve savunma önerisi kilitli teaser olarak görünür — kullanıcı tam ihtiyaç anındayken doğal bir paywall tetiklenir.</p>
+      <h3>Adım 3 — Köşe Ofis (paywall)</h3>
+      <p>Paywall, ürünün premium katmanı "Köşe Ofis" olarak markalanır — "plazanın en üst katı". Kilitli bir özelliğe dokununca açılır; sınırsız çözüm/çeviri, Cerrahi + Patron modu, Ton Hafızası ve Haftalık Karne'yi listeler. Abonelik RevenueCat ile yönetilir; "Geri yükle" ile mevcut abonelik kurtarılır.</p>
+    </div>
+    <div class="shot"><div class="wrap-ph" style="width:218px"><div class="phone"><div class="screen" style="padding:20px 16px;height:470px">
+      <svg class="i" style="align-self:flex-end;color:var(--muted)"><use href="#x"/></svg>
+      <div class="serif" style="font-size:26px;color:var(--ink);margin-top:2px">Köşe Ofis</div>
+      <div class="muted" style="font-size:12px;line-height:1.4;margin-top:5px">Plazanın en üst katı. Sınırsız, tüm tonlar, ton hafızası.</div>
+      <div style="margin-top:18px;display:flex;flex-direction:column;gap:11px">
+        <div style="display:flex;align-items:center;gap:9px"><svg class="i" style="color:var(--red)"><use href="#check"/></svg><span style="font-size:12px">Sınırsız çözüm ve çeviri</span></div>
+        <div style="display:flex;align-items:center;gap:9px"><svg class="i" style="color:var(--red)"><use href="#check"/></svg><span style="font-size:12px">Cerrahi + Patron modu</span></div>
+        <div style="display:flex;align-items:center;gap:9px"><svg class="i" style="color:var(--red)"><use href="#check"/></svg><span style="font-size:12px">Ton hafızası: patronunu eğit</span></div>
+        <div style="display:flex;align-items:center;gap:9px"><svg class="i" style="color:var(--red)"><use href="#check"/></svg><span style="font-size:12px">Haftalık pasif-agresiflik karnesi</span></div>
+      </div>
+      <div style="margin-top:auto"><div class="br" style="padding:12px 0">Yıllık · ₺299</div><div class="muted" style="text-align:center;font-size:11px;padding:10px 0 3px">Geri yükle</div></div>
+    </div></div><div class="cap">Adım 3 · Paywall — Köşe Ofis</div></div></div>
+  </div>
+
+  <div class="twocol" style="margin-top:16px">
+    <div class="shot"><div class="wrap-ph" style="width:218px"><div class="phone"><div class="screen" style="height:470px">
+      <div class="hdr"><div class="brand"><div class="bmk"><span>cb</span></div><span class="bname">Corporate BlaBla Decoder</span></div></div>
+      <div class="pad"><div class="pcard"><div class="serif" style="font-size:17px;color:var(--ink)">Ücretsiz</div><div class="muted" style="font-size:11px;margin-top:3px">Plazanın en üst katı seni bekliyor.</div><div class="br" style="margin-top:10px;padding:9px 0">Köşe Ofis'i aç</div></div></div>
+      <div class="pad" style="margin-top:14px"><div class="lbl">Bildirimler</div></div>
+      <div class="pad" style="margin-top:7px"><div class="pcard"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:12px">Bildirimler</span><div class="toggle"><i></i></div></div><div class="lbl" style="margin-top:12px;font-size:8px">Sabah hatırlatması</div><div style="display:flex;gap:5px;margin-top:6px"><span class="tchip">08:00</span><span class="tchip on">08:15</span><span class="tchip">08:30</span></div></div></div>
+      <div class="pad" style="margin-top:14px"><div class="pcard" style="padding:2px 13px">
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:.5px solid var(--line2);font-size:12px"><span>Haftalık karne</span><svg class="i sm" style="color:var(--muted)"><use href="#chev"/></svg></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:.5px solid var(--line2);font-size:12px"><span>Ton Hafızası</span><svg class="i sm" style="color:var(--muted)"><use href="#chev"/></svg></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;font-size:12px"><span style="color:var(--red)">Hesabı sil</span><svg class="i sm" style="color:var(--muted)"><use href="#chev"/></svg></div></div></div>
+      <div class="tabs"><div class="tab"><svg class="i"><use href="#cal"/></svg></div><div class="tab"><svg class="i"><use href="#mail"/></svg></div><div class="tab"><svg class="i"><use href="#pencil"/></svg></div><div class="tab on"><svg class="i"><use href="#user"/></svg><div>Profil</div></div></div>
+    </div></div><div class="cap">Adım 4 · Profil + ayarlar</div></div></div>
+    <div class="txt">
+      <h3 style="margin-top:0">Adım 4 — Profil ve ayarlar</h3>
+      <p>Profil sekmesi premium durumunu, bildirim tercihlerini ve gizlilik kontrollerini barındırır. Üstte Köşe Ofis kartı (abone değilse) durur. <b>Bildirimler</b> tek anahtarla açılıp kapanır; sabah/akşam saatleri buradan ayarlanır.</p>
+      <p>Alt liste premium kapıları ve hesap yönetimini içerir: <b>Haftalık Karne</b>, <b>Ton Hafızası</b>, ve <b>Hesabı sil</b>. KVKK gereği kullanıcı kendi verisini tek dokunuşla silebilir — bu, güvenlik kurallarında da garanti altındadır (kullanıcı yalnızca kendi belgesini silebilir).</p>
+      <p>Bildirim stratejisi cerrahidir: varsayılan günde en fazla 1 push. Sabah ~08:15 ritüel tetikleyici, akşam ~18:30 yalnızca o gün açılmadıysa streak hatırlatması, pazartesi Haftalık Karne. Bildirim yorgunluğu churn demektir; cömert değil, ölçülü davranıyoruz.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PREMIUM/FREE + BÜYÜME ============ -->
+<div class="section">
+  <h2 style="margin-top:0">Ücretsiz / Köşe Ofis ve büyüme döngüsü</h2>
+  <p>Altın kural: <b>viraliteyi besleyen her şey ücretsiz</b> (paylaşım, Günlük Plaza, watermark — bunlar pazarlama bütçen). Premium = power-use + lock-in. Tablodaki ayrım bunu yansıtır.</p>
+  <table>
+    <thead><tr><th style="width:46%">Özellik</th><th style="width:27%">Ücretsiz</th><th>Köşe Ofis (premium)</th></tr></thead>
+    <tbody>
+      <tr><td>Günlük Plaza + paylaşım + streak</td><td><span class="tick">✓</span> tam</td><td><span class="tick">✓</span> tam</td></tr>
+      <tr><td>Decoder / Composer</td><td>günde 3 + 3</td><td><span class="tick">✓</span> sınırsız</td></tr>
+      <tr><td>Tonlar</td><td>Nazik, Mesafeli</td><td>+ Cerrahi, Patron</td></tr>
+      <tr><td>Decoder "savunma önerisi"</td><td>—</td><td><span class="tick">✓</span></td></tr>
+      <tr><td>Ton Hafızası ("patronunu eğit")</td><td>—</td><td><span class="tick">✓</span> lock-in</td></tr>
+      <tr><td>Haftalık Karne</td><td>—</td><td><span class="tick">✓</span></td></tr>
+      <tr><td>Arşiv</td><td>cihazda (yerel)</td><td>cihazda (yerel)</td></tr>
+    </tbody>
+  </table>
+  <p>Tüm bu parçalar tek bir döngüde birleşir. Ürünün başarısı bu döngünün dönmesine bağlıdır:</p>
+  <div class="flow">
+    <div class="node"><div class="t">Tüket</div><div class="d">Commute'ta yalnız: Plaza / Decoder / Composer.</div></div>
+    <div class="arrow">→</div>
+    <div class="node red"><div class="t">Artefakt</div><div class="d">Çıktı = damgalı, karekodlu paylaşım kartı.</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="t">Yay</div><div class="d">Ofis grubu / WhatsApp / Story.</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="t">Tara → kur</div><div class="d">Yeni kullanıcı, sıfır sürtünme.</div></div>
+  </div>
+  <div class="callout"><p style="margin:0">Çözülmesi gereken tek zor problem retention idi — onu dört ayaklı masayla çözdük. Geriye kopyalanamaz tek varlık kalıyor: <b>sesin küratörlüğü.</b> Model herkeste aynı; ürünün ruhu, o el-küratörlü altın few-shot havuzunda yaşıyor. İşte bu yüzden büyük platformlar bu ürünü kopyalayamaz.</p></div>
+  <p class="muted" style="font-size:9.2pt;margin-top:14px">Bu doküman ürün vizyonunu, doğuş hikâyesini ve kullanımı anlatır. Mimari, veri modeli, güvenlik kuralları ve yazılım altyapısı için ayrı <b>Teknik Doküman</b>'a bakınız.</p>
+</div>

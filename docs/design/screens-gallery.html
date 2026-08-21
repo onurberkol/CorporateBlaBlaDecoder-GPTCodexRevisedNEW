@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Corporate BlaBla — Ekranlar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4F1EA; --card:#FBFAF6; --alt:#EDE7DA; --line:#DDD4C3; --line2:#D4CBB9; --track:#E2DACA;
+    --ink:#1A1714; --ink2:#221F1B; --soft:#6B6358; --muted:#A89E8E; --red:#BC3B2E; --rwash:#F6E3DF; --rtext:#8E2A20;
+    --d-bg:#1B1916; --d-card:#23201C; --d-alt:#2A2722; --d-line:#3A352E; --d-text:#F0EBE0; --d-soft:#B3AA9B; --d-red:#D6584A; --d-rwash:#3A2521; --d-rtext:#E9A89F;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:#E7E2D6;font-family:'Inter',-apple-system,system-ui,sans-serif;color:var(--ink2);padding:40px 20px 60px;}
+  .head{max-width:980px;margin:0 auto 30px;}
+  .head .m{display:flex;align-items:center;gap:9px;}
+  .head .mk{width:30px;height:30px;border-radius:7px;background:var(--red);color:var(--paper);display:flex;align-items:center;justify-content:center;font-family:'Fraunces',serif;font-size:16px;}
+  .head h1{font-family:'Fraunces',serif;font-weight:600;font-size:26px;margin:14px 0 4px;}
+  .head p{color:var(--soft);font-size:14px;margin:0;}
+  .gal{max-width:980px;margin:0 auto;display:flex;flex-wrap:wrap;gap:22px;justify-content:center;}
+  .wrap{width:264px;}
+  .cap{font-family:'Inter';font-size:12px;color:var(--soft);text-align:center;margin-top:10px;letter-spacing:.3px;}
+  .phone{background:#221F1B;border-radius:30px;padding:8px;box-shadow:0 14px 40px rgba(80,70,55,.22);}
+  .screen{background:var(--paper);border-radius:23px;overflow:hidden;display:flex;flex-direction:column;height:540px;}
+  .screen.dark{background:var(--d-bg);}
+  .pad{padding:0 15px;}
+  .hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 15px 9px;}
+  .brand{display:flex;align-items:center;gap:6px;}
+  .mk{width:17px;height:17px;border:1.4px solid var(--red);border-radius:3px;display:flex;align-items:center;justify-content:center;}
+  .mk span{color:var(--red);font-family:'Fraunces',serif;font-size:10px;}
+  .bname{font-family:'Fraunces',serif;font-size:13px;color:var(--ink);}
+  .dark .bname{color:var(--d-text);}
+  .lbl{font-size:10px;letter-spacing:1.3px;color:var(--muted);text-transform:uppercase;}
+  .input{margin-top:6px;background:var(--alt);border:.5px solid var(--line);border-radius:8px;padding:9px 10px;font-size:12px;color:#3B362E;line-height:1.45;}
+  .dark .input{background:var(--d-alt);border-color:var(--d-line);color:var(--d-soft);}
+  .btnD{background:var(--ink);color:var(--paper);text-align:center;font-size:12px;font-weight:500;padding:9px 0;border-radius:8px;}
+  .btnR{background:var(--red);color:var(--paper);text-align:center;font-size:12px;font-weight:500;padding:9px 0;border-radius:8px;display:flex;align-items:center;justify-content:center;gap:5px;}
+  .card{position:relative;background:var(--card);border:.5px solid var(--line);border-radius:10px;padding:13px 12px;overflow:hidden;}
+  .dark .card{background:var(--d-card);border-color:var(--d-line);}
+  .stamp{position:absolute;top:10px;right:9px;transform:rotate(-9deg);border:2px solid var(--red);color:var(--red);font-size:9px;letter-spacing:1.2px;padding:2px 7px;border-radius:3px;opacity:.82;font-family:'Fraunces',serif;}
+  .ser{font-family:'Fraunces',serif;}
+  .tabs{display:flex;border-top:.5px solid var(--line);margin-top:auto;}
+  .dark .tabs{border-color:var(--d-line);}
+  .tab{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 0 11px;color:var(--muted);font-size:8px;}
+  .tab.on{color:var(--red);}
+  .i{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.8;}
+  .chip{background:var(--alt);color:#5F574A;font-size:9px;padding:3px 7px;border-radius:5px;}
+  .pill{display:flex;align-items:center;gap:4px;background:var(--rwash);padding:3px 8px;border-radius:20px;}
+  .pill span{color:var(--rtext);font-size:11px;font-weight:500;}
+  .row{display:flex;align-items:center;justify-content:space-between;padding:10px 0;font-size:13px;}
+  .meter{display:flex;align-items:center;gap:8px;}
+  .bar{flex:1;height:6px;background:var(--track);border-radius:4px;overflow:hidden;}
+  .bar>i{display:block;height:100%;background:var(--red);}
+  .dark .bar{background:var(--d-line);}
+  .dark .bar>i{background:var(--d-red);}
+  .dot{width:11px;height:11px;border-radius:50%;background:var(--paper);border:2px solid var(--line2);}
+  .toggle{width:38px;height:22px;border-radius:20px;background:var(--red);position:relative;}
+  .toggle>i{position:absolute;top:2px;right:2px;width:18px;height:18px;border-radius:50%;background:#fff;}
+  .timechip{font-size:11px;color:#3B362E;background:var(--alt);border:.5px solid var(--line);padding:6px 11px;border-radius:8px;}
+  .timechip.on{color:var(--paper);background:var(--red);border-color:var(--red);font-weight:500;}
+</style>
+</head>
+<body>
+
+<!-- icon sprite -->
+<svg width="0" height="0" style="position:absolute"><defs>
+  <g id="share"><path d="M12 3v12M8 7l4-4 4 4M5 13v6a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-6"/></g>
+  <g id="flame"><path d="M12 3c.5 3 3 4 3 7a3 3 0 0 1-6 0c0-1 .5-2 1-2.5C9.5 9 10 6 12 3z" fill="currentColor" stroke="none"/></g>
+  <g id="check"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.5 2.5 4.5-5"/></g>
+  <g id="x"><path d="M6 6l12 12M18 6L6 18"/></g>
+  <g id="cal"><rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 9h16M8 3v4M16 3v4"/></g>
+  <g id="mail"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></g>
+  <g id="pencil"><path d="M4 20l4-1L19 8l-3-3L5 16l-1 4z"/></g>
+  <g id="user"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></g>
+  <g id="clock"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></g>
+  <g id="chev"><path d="M9 6l6 6-6 6"/></g>
+  <g id="hist"><path d="M4 12a8 8 0 1 0 2-5"/><path d="M4 4v4h4M12 8v4l3 2"/></g>
+  <g id="star"><path d="M12 3l2.5 5.5 6 .6-4.5 4 1.3 5.9L12 21l-5.3 1 1.3-5.9-4.5-4 6-.6z" fill="currentColor" stroke="none"/></g>
+</defs></svg>
+
+<div class="head">
+  <div class="m"><div class="mk">cb</div></div>
+  <h1>Corporate BlaBla — Ekranlar</h1>
+  <p>Decoder · Onboarding · Paywall · Profil · Günlük Plaza (Bingo) · Composer (karanlık mod)</p>
+</div>
+
+<div class="gal">
+
+  <!-- 1. DECODER -->
+  <div class="wrap"><div class="phone"><div class="screen">
+    <div class="hdr"><div class="brand"><div class="mk"><span>cb</span></div><span class="bname">Corporate BlaBla</span></div><svg class="i" style="width:15px;height:15px;color:#9A9183"><use href="#hist"/></svg></div>
+    <div class="pad"><div class="lbl">Gelen mesaj</div><div class="input">"Görünürlük açısından [Yönetici]'yi de loop'a alıyorum."</div></div>
+    <div class="pad" style="margin-top:10px"><div class="btnD">Çöz</div></div>
+    <div class="pad" style="margin-top:12px"><div class="card">
+      <div class="stamp">ÇÖZÜLDÜ</div>
+      <div style="font-size:9px;letter-spacing:1.5px;color:var(--red);text-transform:uppercase;margin-bottom:6px">Tercüme</div>
+      <div class="ser" style="font-size:15px;line-height:1.4;color:var(--ink)">Bu işi yapmadın. Artık patronun da biliyor. İyi şanslar.</div>
+      <div style="height:.5px;background:var(--line2);margin:12px 0"></div>
+      <div class="meter"><span style="font-size:8px;color:var(--soft);text-transform:uppercase;white-space:nowrap">Pasif-ag.</span><div class="bar"><i style="width:96%"></i></div><span class="ser" style="font-size:14px;color:var(--red)">96</span></div>
+      <div style="display:flex;gap:5px;margin-top:11px;flex-wrap:wrap"><span class="chip">görünürlük = şikayet</span><span class="chip">loop = tanık</span></div>
+    </div></div>
+    <div class="pad" style="margin-top:11px"><div class="btnR"><svg class="i" style="width:13px;height:13px"><use href="#share"/></svg>Sonucu paylaş</div></div>
+    <div class="tabs"><div class="tab"><svg class="i"><use href="#cal"/></svg></div><div class="tab on"><svg class="i"><use href="#mail"/></svg>Decoder</div><div class="tab"><svg class="i"><use href="#pencil"/></svg></div><div class="tab"><svg class="i"><use href="#user"/></svg></div></div>
+  </div></div><div class="cap">Decoder — sonuç + metre + tuzaklar</div></div>
+
+  <!-- 2. ONBOARDING -->
+  <div class="wrap"><div class="phone"><div class="screen" style="padding:26px 18px">
+    <div style="display:flex;gap:5px;margin-bottom:28px"><div style="width:22px;height:4px;border-radius:2px;background:var(--red)"></div><div style="width:22px;height:4px;border-radius:2px;background:var(--red)"></div><div style="width:22px;height:4px;border-radius:2px;background:var(--line)"></div></div>
+    <div class="ser" style="font-size:24px;line-height:1.2;color:var(--ink)">Yol saatlerin?</div>
+    <div class="lbl" style="margin-top:24px">Sabah</div>
+    <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:9px"><span class="timechip">07:30</span><span class="timechip">08:00</span><span class="timechip on">08:15</span><span class="timechip">08:30</span></div>
+    <div class="lbl" style="margin-top:22px">Akşam</div>
+    <div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:9px"><span class="timechip">17:30</span><span class="timechip">18:00</span><span class="timechip on">18:30</span><span class="timechip">19:00</span></div>
+    <div style="margin-top:auto"><div class="btnD" style="padding:12px 0;font-size:13px">Devam</div></div>
+  </div></div><div class="cap">Onboarding — yol saati seçimi</div></div>
+
+  <!-- 3. PAYWALL -->
+  <div class="wrap"><div class="phone"><div class="screen" style="padding:22px 18px">
+    <svg class="i" style="align-self:flex-end;color:var(--muted)"><use href="#x"/></svg>
+    <div class="ser" style="font-size:28px;color:var(--ink);margin-top:2px">Köşe Ofis</div>
+    <div style="font-size:13px;line-height:1.4;color:var(--soft);margin-top:6px">Plazanın en üst katı. Sınırsız, tüm tonlar, ton hafızası.</div>
+    <div style="margin-top:22px;display:flex;flex-direction:column;gap:13px">
+      <div style="display:flex;align-items:center;gap:10px"><svg class="i" style="color:var(--red)"><use href="#check"/></svg><span style="font-size:13px">Sınırsız çözüm ve çeviri</span></div>
+      <div style="display:flex;align-items:center;gap:10px"><svg class="i" style="color:var(--red)"><use href="#check"/></svg><span style="font-size:13px">Cerrahi + Patron modu</span></div>
+      <div style="display:flex;align-items:center;gap:10px"><svg class="i" style="color:var(--red)"><use href="#check"/></svg><span style="font-size:13px">Ton hafızası: patronunu eğit</span></div>
+      <div style="display:flex;align-items:center;gap:10px"><svg class="i" style="color:var(--red)"><use href="#check"/></svg><span style="font-size:13px">Haftalık pasif-agresiflik karnesi</span></div>
+    </div>
+    <div style="margin-top:auto">
+      <div class="btnR" style="padding:13px 0;font-size:13px">Yıllık · ₺299</div>
+      <div style="text-align:center;font-size:12px;color:var(--soft);padding:12px 0 4px">Geri yükle</div>
+      <div style="text-align:center;font-size:9px;color:var(--muted);line-height:1.4">Abonelik otomatik yenilenir. İstediğin zaman iptal edebilirsin.</div>
+    </div>
+  </div></div><div class="cap">Paywall — Köşe Ofis</div></div>
+
+  <!-- 4. PROFILE -->
+  <div class="wrap"><div class="phone"><div class="screen">
+    <div class="hdr"><div class="brand"><div class="mk"><span>cb</span></div><span class="bname">Corporate BlaBla</span></div></div>
+    <div class="pad"><div class="card" style="padding:14px 14px">
+      <div style="display:flex;justify-content:space-between;align-items:center"><span class="ser" style="font-size:18px;color:var(--ink)">Ücretsiz</span></div>
+      <div style="font-size:12px;color:var(--soft);margin-top:4px;line-height:1.4">Plazanın en üst katı. Sınırsız, tüm tonlar.</div>
+      <div class="btnR" style="margin-top:12px;padding:10px 0">Köşe Ofis'i aç</div>
+    </div></div>
+    <div class="pad" style="margin-top:16px"><div class="lbl">Bildirimler</div></div>
+    <div class="pad" style="margin-top:8px"><div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px">Bildirimler</span><div class="toggle"><i></i></div></div>
+      <div class="lbl" style="margin-top:14px;font-size:9px">Sabah hatırlatması</div>
+      <div style="display:flex;gap:6px;margin-top:7px"><span class="timechip">08:00</span><span class="timechip on">08:15</span><span class="timechip">08:30</span></div>
+    </div></div>
+    <div class="pad" style="margin-top:16px"><div class="card" style="padding:4px 14px">
+      <div class="row" style="border-bottom:.5px solid var(--line2)"><span>Satın alımları geri yükle</span><svg class="i" style="width:15px;height:15px;color:var(--muted)"><use href="#chev"/></svg></div>
+      <div class="row" style="border-bottom:.5px solid var(--line2)"><span>Gizlilik politikası</span><svg class="i" style="width:15px;height:15px;color:var(--muted)"><use href="#chev"/></svg></div>
+      <div class="row"><span style="color:var(--red)">Hesabı sil</span><svg class="i" style="width:15px;height:15px;color:var(--muted)"><use href="#chev"/></svg></div>
+    </div></div>
+    <div class="tabs"><div class="tab"><svg class="i"><use href="#cal"/></svg></div><div class="tab"><svg class="i"><use href="#mail"/></svg></div><div class="tab"><svg class="i"><use href="#pencil"/></svg></div><div class="tab on"><svg class="i"><use href="#user"/></svg>Profil</div></div>
+  </div></div><div class="cap">Profil — abonelik + ayarlar</div></div>
+
+  <!-- 5. PLAZA BINGO -->
+  <div class="wrap"><div class="phone"><div class="screen">
+    <div class="hdr"><div class="brand"><div class="mk"><span>cb</span></div><span class="bname">Corporate BlaBla</span></div><div class="pill"><svg class="i" style="width:14px;height:14px;color:var(--red)"><use href="#flame"/></svg><span>12 gün</span></div></div>
+    <div class="pad" style="display:flex;justify-content:space-between;align-items:center"><span class="lbl">Günün Plazası</span><span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--muted)"><svg class="i" style="width:12px;height:12px"><use href="#clock"/></svg>yeni tuzak 13:28</span></div>
+    <div class="pad" style="margin-top:12px"><div class="card">
+      <div class="stamp">ÇÖZÜLDÜ</div>
+      <div class="lbl" style="margin-bottom:10px">Toplantı Bingo</div>
+      <div style="display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;gap:6px">
+          <div class="bc">duyuyor musunuz?</div><div class="bc">ekranı paylaşamayan</div><div class="bc">mute açık unutan</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <div class="bc">kamerası kapalı</div><div class="bc" style="background:var(--rwash);color:var(--rtext)">ben sonra yazarım</div><div class="bc">bağlantı koptu</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <div class="bc">geç katılan</div><div class="bc">sunum donduran</div><div class="bc">özetler misin?</div>
+        </div>
+      </div>
+    </div></div>
+    <div class="pad" style="margin-top:13px;display:flex;align-items:center;gap:9px">
+      <div style="display:flex"><div style="width:20px;height:20px;border-radius:50%;background:#D8A7A0;border:1.5px solid var(--paper)"></div><div style="width:20px;height:20px;border-radius:50%;background:#C9BFAD;border:1.5px solid var(--paper);margin-left:-7px"></div><div style="width:20px;height:20px;border-radius:50%;background:#B6A98F;border:1.5px solid var(--paper);margin-left:-7px"></div></div>
+      <span style="font-size:11px;color:var(--soft)">Bugün <b style="color:var(--ink)">9.871</b> kişi de buradaydı.</span>
+    </div>
+    <div class="pad" style="margin-top:13px"><div class="btnR" style="padding:10px 0"><svg class="i" style="width:13px;height:13px"><use href="#share"/></svg>Sonucu paylaş</div></div>
+    <div class="tabs"><div class="tab on"><svg class="i"><use href="#cal"/></svg>Günlük</div><div class="tab"><svg class="i"><use href="#mail"/></svg></div><div class="tab"><svg class="i"><use href="#pencil"/></svg></div><div class="tab"><svg class="i"><use href="#user"/></svg></div></div>
+  </div></div><div class="cap">Günlük Plaza — Bingo formatı</div></div>
+
+  <!-- 6. DARK COMPOSER -->
+  <div class="wrap"><div class="phone"><div class="screen dark">
+    <div class="hdr"><div class="brand"><div class="mk" style="border-color:var(--d-red)"><span style="color:var(--d-red)">cb</span></div><span class="bname">Corporate BlaBla</span></div><svg class="i" style="width:15px;height:15px;color:#6B6358"><use href="#hist"/></svg></div>
+    <div class="pad"><div class="lbl" style="color:#8A8276">Niyetin</div><div class="input">"Bu iş benim değil, senin işin, üstüme yıkma."</div></div>
+    <div class="pad" style="margin-top:18px"><div class="lbl" style="color:#8A8276">Ton Kadranı</div>
+      <div style="position:relative;height:42px;margin-top:14px">
+        <div style="position:absolute;top:8px;left:8px;right:8px;height:2px;background:var(--d-line)"></div>
+        <div style="position:absolute;top:8px;left:8px;right:32%;height:2px;background:var(--d-red)"></div>
+        <div style="position:absolute;top:0;left:0;right:0;display:flex;justify-content:space-between">
+          <div style="text-align:center;width:25%"><div class="dot" style="background:var(--d-bg);border-color:#3A352E;margin:3px auto 0"></div><div style="font-size:9px;color:#8A8276;margin-top:8px">Nazik</div></div>
+          <div style="text-align:center;width:25%"><div class="dot" style="background:var(--d-bg);border-color:#3A352E;margin:3px auto 0"></div><div style="font-size:9px;color:#8A8276;margin-top:8px">Mesafeli</div></div>
+          <div style="text-align:center;width:25%"><div class="dot" style="background:var(--d-bg);border-color:#3A352E;margin:3px auto 0"></div><div style="font-size:9px;color:#8A8276;margin-top:8px">Cerrahi</div></div>
+          <div style="text-align:center;width:25%"><div style="width:20px;height:20px;border-radius:50%;background:var(--d-red);border:3px solid var(--d-bg);box-shadow:0 0 0 1.5px var(--d-red);margin:-1px auto 0"></div><div style="font-size:10px;color:var(--d-red);font-weight:500;margin-top:5px">Patron</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="pad" style="margin-top:6px"><div class="card">
+      <div style="display:inline-block;background:var(--d-rwash);color:var(--d-rtext);font-size:9px;letter-spacing:.6px;padding:2px 8px;border-radius:4px;text-transform:uppercase">Patron modu</div>
+      <div class="ser" style="margin-top:10px;font-size:15px;line-height:1.5;color:var(--d-text)">"Bu senin işin. Cuma EOD'a bekliyorum."</div>
+    </div></div>
+    <div class="pad" style="margin-top:12px;display:flex;gap:8px"><div style="flex:1;background:#F0EBE0;color:#1B1916;text-align:center;font-size:12px;font-weight:500;padding:9px 0;border-radius:8px">Kopyala</div><div style="width:44px;background:var(--d-red);border-radius:8px;display:flex;align-items:center;justify-content:center"><svg class="i" style="width:15px;height:15px;color:#1B1916"><use href="#share"/></svg></div></div>
+    <div class="tabs"><div class="tab"><svg class="i"><use href="#cal"/></svg></div><div class="tab"><svg class="i"><use href="#mail"/></svg></div><div class="tab on" style="color:var(--d-red)"><svg class="i"><use href="#pencil"/></svg>Composer</div><div class="tab"><svg class="i"><use href="#user"/></svg></div></div>
+  </div></div><div class="cap">Composer — karanlık mod, Patron tonu</div></div>
+
+</div>
+<style>.bc{flex:1;min-height:58px;background:var(--alt);border-radius:8px;padding:7px;display:flex;align-items:center;justify-content:center;text-align:center;font-size:10px;color:var(--ink);line-height:1.25;}</style>
+</body>
+</html>

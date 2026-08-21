@@ -1,0 +1,225 @@
+<style>
+  body{ font-size:10.3pt; line-height:1.58; }
+  p{ margin:0 0 9px; }
+  h2{ font-size:15.5pt; margin:22px 0 9px; }
+  h3{ font-size:12.6pt; margin-top:16px; }
+  h4{ font-size:10.8pt; margin:12px 0 4px; }
+  pre{ font-size:7.7pt; line-height:1.42; }
+  .lead2{ font-size:11pt; color:#3a342c; }
+  .step{ display:flex; gap:12px; margin:9px 0; page-break-inside:avoid; }
+  .step .n{ flex:0 0 26px; height:26px; border-radius:50%; background:var(--rwash); color:var(--rtext);
+    font-family:Georgia,serif; font-size:11pt; display:flex; align-items:center; justify-content:center; }
+  .step .b{ flex:1; }
+  .step .b .t{ font-family:Georgia,serif; font-size:11pt; color:var(--ink); }
+  .step .b .d{ font-size:9.4pt; color:#4a4338; }
+  .kv{ font-size:9.4pt; }
+  .kv b{ color:var(--ink); }
+  .why{ background:var(--rwash); border-radius:8px; padding:8px 12px; font-size:9.3pt; color:#5a3530; margin:8px 0; }
+  .why b{ color:var(--rtext); }
+  .filehdr{ font-family:"DejaVu Sans Mono",monospace; font-size:8.6pt; color:var(--rtext); background:var(--alt); border-radius:6px 6px 0 0; padding:4px 10px; margin:10px 0 0; border-bottom:2px solid var(--red); }
+  .filehdr + pre{ margin-top:0; border-radius:0 0 8px 8px; }
+</style>
+<svg width="0" height="0" style="position:absolute"><defs>
+  <g id="lock"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></g>
+</defs></svg>
+
+<!-- ============ COVER ============ -->
+<div class="cover">
+  <div class="mk">cb</div>
+  <div class="cover-mid">
+    <span class="tag">Teknik Doküman · v1 · Geliştirici Devir Kılavuzu</span>
+    <h1>Corporate BlaBla<br>Decoder</h1>
+    <div class="sub">Mimari, veri modeli, kod ve kararların tam dökümü. Bu dokümanı devralan bir yazılımcı, projeyi adım adım nasıl inşa ettiğimizi, hangi kararı neden verdiğimizi ve her parçanın nasıl çalıştığını buradan eksiksiz anlayabilir.</div>
+  </div>
+  <div class="cover-foot">
+    <div>
+      <div style="font-family:Georgia,serif;font-size:12pt;color:var(--ink)">Odit Teknoloji ve İletişim Hizmetleri Ticaret A.Ş.</div>
+      <div>İstanbul</div>
+    </div>
+    <div style="text-align:right">
+      <div>Expo SDK 54 · Firebase v2 · Claude</div>
+      <div>RevenueCat · Next.js 15 · npm workspaces</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ GİRİŞ + OKUMA KILAVUZU ============ -->
+<div class="pb section">
+  <h2 style="margin-top:0">Bu doküman ne anlatıyor</h2>
+  <p class="lead2">Bu, bir devir (handoff) dokümanıdır. Amacı, kod tabanını ilk kez devralan bir yazılımcının; mimari değişmezleri, her modülün sorumluluğunu, kritik kod parçalarını ve en önemlisi <b>bu kararların neden böyle verildiğini</b> tek bir yerden anlamasıdır. Ürün vizyonu ve kullanıcı akışı için ayrı <b>Ürün Dokümanı</b> vardır; burada odak tamamen teknik.</p>
+
+  <h3>Teknoloji yığını (özet)</h3>
+  <table>
+    <thead><tr><th style="width:22%">Katman</th><th style="width:30%">Teknoloji</th><th>Rol</th></tr></thead>
+    <tbody>
+      <tr><td>Paylaşılan IP</td><td>TypeScript (<code>packages/core</code>)</td><td>Tipler, ton tanımları, few-shot kütüphaneleri, prompt builder'lar. Stack-agnostik.</td></tr>
+      <tr><td>Backend</td><td>Firebase Functions v2 (Node 20)</td><td>Claude proxy, kota, premium gating, RevenueCat webhook, zamanlanmış işler.</td></tr>
+      <tr><td>Veri</td><td>Firestore + Security Rules</td><td>Kullanıcı belgeleri, günlük içerik, agregat sayaçlar. Hassas alanlar sunucu-yazımı.</td></tr>
+      <tr><td>Mobil</td><td>Expo SDK 54 · Expo Router · Reanimated 4</td><td>4 sekme, Ton Kadranı, paylaşım kartı, anonim auth, yerel gizlilik.</td></tr>
+      <tr><td>Abonelik</td><td>RevenueCat</td><td>Satın alma + entitlement; webhook ile <code>tier</code>'ı yazan tek kaynak.</td></tr>
+      <tr><td>İçerik</td><td>tsx CLI (<code>content-pipeline</code>)</td><td>Günlük Plaza kartlarını Claude ile batch üretip Firestore'a yazar.</td></tr>
+      <tr><td>Admin</td><td>Next.js 15 (App Router)</td><td>Sunucu-taraflı Firebase Admin SDK; Plaza editörü + metrikler.</td></tr>
+      <tr><td>Web</td><td>Firebase Hosting</td><td>Landing + KVKK/yasal sayfalar (locale-aware).</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Dokümanın okunma sırası</h3>
+  <p>Önce <b>inşa hikâyesini</b> (hangi sırayla, neden) okuyun — bu, kod tabanının zihinsel haritasını verir. Sonra <b>mimari değişmez kuralı</b> içselleştirin; kod tabanındaki hemen her güvenlik kararı oradan türer. Ardından modüller (<code>core → functions → firestore → mobile → pipeline → admin</code>) sırayla, her birinin gerçek kod alıntılarıyla. En sonda güvenlik tehdit modeli, dağıtım/devir adımları ve "sesi yeniden ayarlama" operasyon kılavuzu var.</p>
+</div>
+
+<!-- ============ İNŞA HİKÂYESİ ============ -->
+<div class="section">
+  <h2>İnşa hikâyesi: hangi sırayla ve neden</h2>
+  <p>Proje rastgele bir sırayla yazılmadı. Her adım bir öncekinin üstüne, bilinçli bir bağımlılık mantığıyla kuruldu. Devralan yazılımcının kod tabanını "neden böyle bölünmüş" diye sorgulamadan anlaması için, izlediğimiz yolu olduğu gibi aktarıyorum.</p>
+
+  <div class="step"><div class="n">0</div><div class="b"><div class="t">Fikir ve sesin sabitlenmesi (kod öncesi)</div><div class="d">Beyaz yakalı komütçü analiziyle başladık; viral yakıtın kurumsal frustrasyon olduğuna karar verdik. <b>Kritik karar:</b> kod yazmadan önce "ses"i sabitledik — Decoder ve Composer için TR/EN altın few-shot örneklerini elle yazdık. Çünkü ses, stack'ten bağımsız ve kopyalanamaz olan kısım; iskeleti boş kutuya kurmamak için önce o netleşmeliydi.</div></div></div>
+  <div class="step"><div class="n">1</div><div class="b"><div class="t">IP çekirdeği — <code>packages/core</code></div><div class="d">İlk yazılan kod. Tip sözleşmeleri, ton tanımları, few-shot kütüphaneleri ve iki system-prompt builder. Firebase yok, React Native yok — saf IP. <b>Neden ilk:</b> hem proxy hem app bunu tüketecek; tek doğruluk kaynağı burada olmalı.</div></div></div>
+  <div class="step"><div class="n">2</div><div class="b"><div class="t">Cloud Function proxy — <code>functions</code></div><div class="d"><code>core</code>'u tüketen ilk gerçek tüketici. Claude anahtarını tutan, kotayı ve premium gating'i uygulayan tek yer. Mimari değişmez kural burada hayata geçti: anahtar client'ta asla yok.</div></div></div>
+  <div class="step"><div class="n">3</div><div class="b"><div class="t">Expo iskeleti — <code>apps/mobile</code></div><div class="d">Expo Router, 4 sekme, Reanimated Ton Kadranı, <code>react-native-view-shot</code> paylaşım-kartı motoru. Onaylanan kâğıt/mürekkep/damga estetiği <code>theme.ts</code>'te token'a dönüştü. App backend'e yalnızca proxy üzerinden konuşur.</div></div></div>
+  <div class="step"><div class="n">4</div><div class="b"><div class="t">Firebase + RevenueCat + bildirimler</div><div class="d">Anonim Auth, Firestore şeması + güvenlik kuralları, RevenueCat webhook'u (<code>tier</code>'ı yazan tek kaynak), paywall, ve commute-timed yerel bildirimler.</div></div></div>
+  <div class="step"><div class="n">5</div><div class="b"><div class="t">Günlük Plaza pipeline — <code>content-pipeline</code></div><div class="d">Günlük kartları canlı API'ye bağlamadık (maliyet + tutarlılık). Claude ile aylık batch üretip <code>dailyPlaza/{date}</code>'e yazan tsx CLI. App sadece günün kartını çeker.</div></div></div>
+  <div class="step"><div class="n">6</div><div class="b"><div class="t">Mağaza hazırlığı + Admin</div><div class="d">İkonlar (sharp ile), EAS profilleri, locale-aware yasal sayfalar, ASO metadata, submission checklist; ardından Next.js admin paneli (sunucu-taraflı Admin SDK, HMAC şifre kapısı, Plaza editörü).</div></div></div>
+  <div class="step"><div class="n">7</div><div class="b"><div class="t">Dört özellik dalgası</div><div class="d"><b>Dalga 1:</b> Arşiv + Haftalık Karne + premium savunma. <b>Dalga 2:</b> Ton Hafızası (persona — core tipi + prompt enjeksiyonu + sunucu gating). <b>Dalga 3:</b> App Check + analytics + crash/ErrorBoundary. <b>Dalga 4:</b> Paylaşım kartı QR + erişilebilirlik geçişi.</div></div></div>
+  <div class="step"><div class="n">8</div><div class="b"><div class="t">QA turları + isim güncellemesi</div><div class="d">Typecheck, syntax, davranış testleri, import çözümleme, string/tema/export denetimleri. Son olarak TR ürün adı her yerde "Corporate BlaBla Decoder" olarak güncellendi (US "Per My Last Email" korundu).</div></div></div>
+  <div class="why"><b>Taşıyıcı ilke:</b> bağımlılık sırası. <code>core</code> (kimseye bağlı değil) → <code>functions</code> (yalnızca core'a) → <code>mobile</code> (core + proxy'ye) → <code>pipeline/admin</code> (core + Firestore'a). Bu sıra, her adımın bir öncekini sağlam bir zemin olarak kullanmasını sağladı.</div>
+</div>
+
+<!-- ============ MİMARİ ============ -->
+<div class="pb section">
+  <h2 style="margin-top:0">Mimari ve değişmez kural</h2>
+  <p>Tüm sistem tek bir cümle etrafında kurulur ve devralan herkesin bunu ezbere bilmesi gerekir:</p>
+  <div class="callout">
+    <div class="lbl">Mimari değişmez kural</div>
+    <p style="margin:0"><b>(1)</b> Claude API anahtarı client'ta <b>asla</b> bulunmaz — yalnızca Cloud Function proxy'sinde. <b>(2)</b> <code>users.tier</code> (premium gerçeği) yalnızca RevenueCat webhook'u tarafından yazılır. <b>(3)</b> Kota ve premium gating <b>yalnızca sunucuda</b> uygulanır; <code>firestore.rules</code> istemcinin <code>tier</code>/<code>usage</code>'a dokunmasını engeller.</p>
+  </div>
+
+  <h3>Tehdit modeli — neden böyle</h3>
+  <p>Mobil istemci düşman varsayılır. Birisi APK'yı tersine çevirebilir, istekleri taklit edebilir, kendi Firestore yazımlarını deneyebilir. Bu üç kural tam da bu senaryolara karşı:</p>
+  <table>
+    <thead><tr><th style="width:38%">Saldırı</th><th>Savunma</th></tr></thead>
+    <tbody>
+      <tr><td>Anahtarı APK'dan çıkarıp doğrudan Claude'u kullanmak</td><td>Anahtar client'ta hiç yok; yalnızca proxy secret'ında (<code>defineSecret</code>).</td></tr>
+      <tr><td>Kendine premium vermek (Firestore'da <code>tier='premium'</code> yazmak)</td><td>Kurallar <code>tier</code>'ı istemci-yazımına kapatır; yalnızca Admin SDK (webhook) yazar.</td></tr>
+      <tr><td>Günlük kotayı sıfırlamak (<code>usage</code>'ı silmek)</td><td><code>usage</code> da istemci-yazımına kapalı; sayaç sunucu transaction'ında artar.</td></tr>
+      <tr><td>Sahte istemciden bedava çağrı yağdırmak</td><td>App Check (üretimde zorunlu) + auth zorunluluğu + girdi/uzunluk limitleri.</td></tr>
+      <tr><td>Premium tonları free'yken almak</td><td>Proxy, free kullanıcıda premium ton metnini sunucuda maskeler — kilitli içerik istemciye hiç ulaşmaz.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Veri akışı</h3>
+  <div class="flow">
+    <div class="node"><div class="t">Mobil (Expo)</div><div class="d">Anonim Auth → <code>httpsCallable</code>. Anahtarı hiç görmez.</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="t">App Check</div><div class="d">Üretimde zorunlu. Sahte istemcileri eler.</div></div>
+    <div class="arrow">→</div>
+    <div class="node red"><div class="t">Cloud Function proxy</div><div class="d">Anahtar + kota + gating + prompt kurulumu.</div></div>
+    <div class="arrow">→</div>
+    <div class="node"><div class="t">Claude API</div><div class="d">Katı JSON → tiplere parse.</div></div>
+  </div>
+  <div class="flow">
+    <div class="node"><div class="t">Firestore</div><div class="d"><code>users</code> · <code>dailyPlaza</code> · <code>plazaStats</code></div></div>
+    <div class="arrow">·</div>
+    <div class="node red"><div class="t">RevenueCat webhook</div><div class="d"><code>users.tier</code>'ın tek yazarı.</div></div>
+    <div class="arrow">·</div>
+    <div class="node"><div class="t">Pipeline</div><div class="d">Claude → batch → <code>dailyPlaza</code></div></div>
+    <div class="arrow">·</div>
+    <div class="node"><div class="t">Admin</div><div class="d">Server-side Admin SDK.</div></div>
+  </div>
+  <p>Neden anonim auth? Çünkü sürtünme viralitenin düşmanı — hesap zorlaması dönüşümü öldürür. Ama proxy'nin yine de istek başına bir kimliğe ihtiyacı var (kota, tier). Anonim Auth ikisini birden çözer: kullanıcıdan hiçbir şey istemeden Firebase bir <code>uid</code> verir, bu <code>uid</code> aynı zamanda RevenueCat <code>appUserID</code>'sidir, böylece webhook doğrudan doğru kullanıcı belgesine yazar.</p>
+</div>
+
+<!-- ============ MONOREPO ============ -->
+<div class="section">
+  <h2>Monorepo ve build topolojisi</h2>
+  <p>npm workspaces kullanıyoruz (kök <code>package.json</code> içinde <code>"workspaces": ["packages/*","apps/*","admin"]</code>). Paylaşılan IP (<code>packages/core</code>) hem proxy hem app tarafından import edilir.</p>
+<div class="filehdr">corporate-blabla/</div>
+<pre>├── packages/core/        <span class="c"># IP: types, tones, fewshot, prompt builder'lar</span>
+│   └── src/{types,tones,plaza,index}.ts · prompts/{decoder,composer}.ts · fewshot/*.{tr,en}.ts
+├── functions/            <span class="c"># Firebase v2 Cloud Functions (esbuild ile core'u bundle'lar)</span>
+│   └── src/{config,quota,anthropic,validate,decode,compose,plaza,revenuecat,reengage}.ts
+├── apps/mobile/          <span class="c"># Expo SDK 54 · Expo Router</span>
+│   └── app/* · src/{theme,lib/*,components/*} · app.json · eas.json
+├── content-pipeline/     <span class="c"># tsx CLI: Claude → dailyPlaza/{date}</span>
+├── web/                  <span class="c"># Firebase Hosting: index + privacy/terms (EN) + gizlilik/kullanim (TR)</span>
+├── admin/                <span class="c"># Next.js 15 admin (server-side Admin SDK)</span>
+├── firestore.rules · firestore.indexes.json
+└── firebase.json         <span class="c"># functions (predeploy build) + hosting (cleanUrls, /kvkk rewrite)</span></pre>
+
+  <h4>Kritik build kararı: functions neden core'u esbuild ile bundle'lar</h4>
+  <p>Firebase yalnızca <code>functions/</code> klasörünü zipleyip deploy eder ve orada <code>npm install</code> çalıştırır. <code>packages/core</code> bu klasörün <i>dışında</i> olduğu için, normal bir <code>import '@corporate-blabla/core'</code> deploy'da çözülemezdi. Çözüm: predeploy adımında esbuild, core'u fonksiyon bundle'ının içine <b>inline</b> eder. Ağır SDK'lar (firebase-admin, firebase-functions, @anthropic-ai/sdk) <code>external</code> bırakılır (bulutta normal kurulur); yalnızca kendi kodumuz ve core inline edilir. <code>firebase.json</code> içindeki <code>predeploy: ["npm --prefix functions run build"]</code> bunu tetikler.</p>
+  <div class="why"><b>Devralırken dikkat:</b> core'da bir değişiklik yaptıysan, functions'ı yeniden deploy etmeden önce <code>npm --prefix functions run build</code> çalıştır — aksi halde eski inline core deploy edilir.</div>
+</div>
+
+<!-- ============ CORE ============ -->
+<div class="pb section">
+  <h2 style="margin-top:0">packages/core — kopyalanamaz IP</h2>
+  <p>Bu paket ürünün ruhudur ve kasıtlı olarak stack-agnostiktir: Firebase'e, React Native'e, hiçbir runtime'a bağlı değildir. Hem proxy hem app çıktı sözleşmesini buradan paylaşır. Few-shot havuzu da burada — modelin herkeste aynı olduğu bir dünyada, asıl moat budur.</p>
+
+  <h3>1 · Çıktı sözleşmesi (<code>types.ts</code>)</h3>
+  <p>Modele, bu şekillere <b>birebir</b> uyan JSON döndürmesi söylenir; app aynı şekillere karşı parse eder. <b>Tasarım kararı:</b> nesne <i>anahtarları</i> İngilizcedir (kod için sabit, locale değişse de değişmez); <i>değerler</i> kullanıcının diline lokalizedir. Bu, i18n eklemeyi kodun şeklini bozmadan mümkün kılar.</p>
+<div class="filehdr">packages/core/src/types.ts</div>
+<pre>export type Locale = 'tr' | 'en';
+export type ToneId = 'kind' | 'distant' | 'surgical' | 'boss';
+export const TONE_ORDER: ToneId[] = ['kind','distant','surgical','boss']; <span class="c">// kadran sırası</span>
+
+export interface DecoderResult {
+  translation: string;                         <span class="c">// düz, bıçak gibi tercüme</span>
+  meter: number;                               <span class="c">// pasif-agresiflik 0–100</span>
+  traps: { phrase: string; meaning: string }[];<span class="c">// 1–3 tuzak</span>
+  defense?: string;                            <span class="c">// premium "savunma önerisi"</span>
+}
+export interface ComposerResult {
+  intent: string;
+  variants: Record&lt;ToneId, string&gt;;            <span class="c">// her ton için bir yeniden-yazım</span>
+}
+export interface ComposePersona {              <span class="c">// premium "ton hafızası"</span>
+  name: string; kind: 'self' | 'recipient'; samples: string[];
+}</pre>
+
+  <h3>2 · Tonların kişiliği ve mizah ölçeği (<code>tones.ts</code>)</h3>
+  <p>Dört ton bir <code>TONES</code> haritasında tanımlıdır. Her tonun bir <code>direction</code> metni vardır — kadranın <b>kişiliği</b> burada yaşar ve Composer prompt'una aynen enjekte edilir. Tonu yeniden ayarlamak, kodun başka yerine dokunmadan bu metni değiştirmektir. <code>FREE_TONES</code> tek bir yerden türer, böylece UI ve proxy aynı gerçeği paylaşır: <code>surgical</code> ve <code>boss</code> premium, <code>kind</code> ve <code>distant</code> ücretsiz.</p>
+  <p>Metre bandı modelden gelmez — <code>meter</code>'dan istemci-tarafında türetilir. Bu fonksiyonun eşiklerini kaydırmak, tüm uygulamayı topyekûn daha acımasız ya da daha ölçülü yapar. Bu yüzden "ürünün mizah ölçeği" odur:</p>
+<div class="filehdr">packages/core/src/tones.ts</div>
+<pre>export function meterBand(meter: number): MeterBand {
+  if (meter &lt;= 30) return 'innocent';   <span class="c">// masum: gerçekten nötr</span>
+  if (meter &lt;= 60) return 'sneaky';     <span class="c">// sinsi: sessiz bir kenar, hafif baskı</span>
+  if (meter &lt;= 85) return 'evidence';   <span class="c">// kanıt-bırakan: "belirttiğim üzere"</span>
+  return 'nuclear';                     <span class="c">// nükleer: loop'a alma, açık eskalasyon</span>
+}
+export const FREE_TONES: ToneId[] =
+  TONE_LIST.filter((t) =&gt; !t.premium).map((t) =&gt; t.id);   <span class="c">// → ['kind','distant']</span></pre>
+
+  <h3>3 · Few-shot kütüphaneleri (<code>fewshot/*</code>) — asıl moat</h3>
+  <p>Decoder ve Composer için TR ve EN ayrı ayrı, elle küratörlenmiş örnekler. Mevcut sayılar: Decoder TR 10 / EN 9, Composer TR 3 / EN 3 senaryo (her senaryo dört tonu içerir). <b>En kritik karar:</b> EN setleri <i>çeviri değil, transcreation</i>. "Rica etsem"in İngilizce karşılığı yoktur; onun yerine "per my last email", "for visibility", "bandwidth", "happy to discuss" vardır. İki ayrı küratörlük, iki ayrı moat. Model herkeste aynı; ses bu dosyalarda.</p>
+  <div class="why"><b>Sesi keskinleştirmek:</b> bu dosyalara örnek ekle/değiştir. Tercümeleri kısa ve bıçak gibi tut; mizah doğruluktan gelmeli, abartıdan değil. Set başına ~10-12 örnek idealdir — bağlamak için yeter, prompt'u şişirmeyecek kadar az.</p>
+
+  <h3>4 · Decoder prompt'u — katı JSON sözleşmesi (<code>prompts/decoder.ts</code>)</h3>
+  <p>Builder, locale'e göre ses kurallarını, metre kalibrasyonunu ve few-shot örneklerini bir araya getirir; modelden <b>tek bir katı-JSON nesnesi</b> döndürmesini ister. Prompt'un kalbi şu (gerçek metinden):</p>
+<div class="filehdr">buildDecoderSystemPrompt(locale, withDefense) — çıktı kuralları</div>
+<pre><span class="c"># Your voice</span>
+- Short and scalpel-like. The translation is a diagnosis, not an essay.
+- The humor comes from being TOO ACCURATE, never from exaggeration.
+- Never moralize, never soften. Write every value in {Turkish|English}.
+
+<span class="c"># The meter (0-100, integer)</span>
+0-30 innocent · 31-60 sneaky · 61-85 evidence · 86-100 nuclear
+Most real corporate messages land 45-85. Reserve 90+ for genuine escalation.
+
+<span class="c"># Output format — CRITICAL</span>
+Return ONLY a single JSON object. No markdown, no fences, no preamble.
+{ "translation": string, "meter": int, "traps": [{ "phrase", "meaning" }] }</pre>
+  <p>Few-shot örnekleri prompt'un sonuna <code>INPUT: … / OUTPUT: {…json…}</code> biçiminde eklenir. <code>withDefense=true</code> (yalnızca premium) olduğunda şemaya bir <code>defense</code> alanı ve onu üreten bir talimat eklenir — gating prompt seviyesinde de uygulanır.</p>
+
+  <h3>5 · Composer prompt'u — dört ton tek çağrı + persona (<code>prompts/composer.ts</code>)</h3>
+  <p><b>Tasarım kararı:</b> Composer dört tonu <i>tek çağrıda</i> üretir. Böylece kullanıcı kadranı kaydırırken yeni bir istek atılmaz — sıfır gecikme, sıfır ekstra maliyet. Ton hafızası (persona) verildiğinde, prompt'a bir "tone memory" bloğu enjekte edilir; örnekler asla aynen kopyalanmaz, yalnızca dört tonun register'ını modüle eder:</p>
+<div class="filehdr">packages/core/src/prompts/composer.ts — personaBlock</div>
+<pre>function personaBlock(persona: ComposePersona, locale: Locale): string {
+  const samples = persona.samples.map((s) =&gt; `  • ${s}`).join('\n');
+  return `
+<span class="c"># Personalization (tone memory)</span>
+The user trained "${persona.name}". Here is how that person writes:
+${samples}
+Subtly adapt the register, formality, directness and vocabulary of ALL
+FOUR variants — but NEVER copy the samples verbatim.`;
+}</pre>
+</div>

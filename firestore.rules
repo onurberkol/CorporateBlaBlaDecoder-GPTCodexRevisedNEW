@@ -1,0 +1,44 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Fields the client is allowed to write on its own user doc.
+    // CRITICAL: `tier` and `usage` are NOT here — only the server (Admin SDK,
+    // which bypasses these rules) may set them. This is what stops a user from
+    // granting themselves premium or resetting their own quota.
+    function safeUserKeys() {
+      return ['prefs', 'pushToken', 'onboardingDone', 'displayLocale', 'streak', 'updatedAt'];
+    }
+
+    match /users/{uid} {
+      allow read: if request.auth != null && request.auth.uid == uid;
+
+      allow create: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.keys().hasOnly(safeUserKeys());
+
+      allow update: if request.auth != null
+        && request.auth.uid == uid
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(safeUserKeys());
+
+      allow delete: if request.auth != null && request.auth.uid == uid;
+    }
+
+    // Daily Plaza cards + aggregate stats: read for any signed-in user,
+    // written only by the server pipeline.
+    match /dailyPlaza/{day} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+    match /plazaStats/{day} {
+      allow read: if request.auth != null;
+      allow write: if false;
+    }
+
+    // Default deny.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

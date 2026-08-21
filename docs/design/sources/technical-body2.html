@@ -1,0 +1,291 @@
+<!-- ============ FUNCTIONS ============ -->
+<div class="pb section">
+  <h2 style="margin-top:0">functions — Cloud Function proxy</h2>
+  <p>Firebase Functions v2, Node 20, bölge <code>europe-west1</code> (İstanbul'a yakın, düşük gecikme). App'in çağırdığı tek backend yüzeyi budur. Tüm callable'lar <code>onCall</code>'dır — auth doğrulaması yerleşik gelir, böylece her fonksiyonda <code>req.auth?.uid</code> hazırdır.</p>
+
+  <h3>Yapılandırma (<code>config.ts</code>) — tek dokunuş noktası</h3>
+  <p>Tüm operasyonel sabitler tek dosyada toplanır; secret'lar <code>defineSecret</code> ile tanımlanır ve <b>asla</b> kaynağa gömülmez.</p>
+<div class="filehdr">functions/src/config.ts</div>
+<pre>export const ANTHROPIC_API_KEY = defineSecret('ANTHROPIC_API_KEY');        <span class="c">// client'ta asla yok</span>
+export const REVENUECAT_WEBHOOK_AUTH = defineSecret('REVENUECAT_WEBHOOK_AUTH');
+export const MODEL = process.env.CLAUDE_MODEL || 'claude-sonnet-4-6';      <span class="c">// ses için Sonnet; maliyet için Haiku'ya düşür</span>
+export const FREE_LIMITS = { decode: 3, compose: 3 } as const;            <span class="c">// premium sınırsız</span>
+export const MAX_INPUT = 2000;                                            <span class="c">// maliyet + suistimal sınırı</span>
+export const REGION = process.env.FUNCTIONS_REGION || 'europe-west1';
+export const ENFORCE_APP_CHECK = process.env.ENFORCE_APP_CHECK === 'true';<span class="c">// dev build hazır olunca true</span></pre>
+
+  <h3>compose handler — auth, doğrulama, kota, gating, maskeleme</h3>
+  <p>Akış her zaman aynı sırada: kimlik → girdi doğrulama → kota (sunucu) → persona sanitizasyonu (premium-gate) → prompt → Claude → doğrula → free kullanıcıda premium tonları maskele. Premium ton metni sunucuda boşaltılır; kilitli içerik istemciye <b>hiç ulaşmaz</b> ama kullanıcı tonların var olduğunu görür (dönüşüm için).</p>
+<div class="filehdr">functions/src/compose.ts (özet)</div>
+<pre>export const compose = onCall(
+  { region: REGION, secrets: [ANTHROPIC_API_KEY], memory: '256MiB',
+    timeoutSeconds: 30, enforceAppCheck: ENFORCE_APP_CHECK },
+  async (req) =&gt; {
+    const uid = req.auth?.uid;
+    if (!uid) throw new HttpsError('unauthenticated', 'Sign-in required.');
+
+    const { intent, locale, persona } = (req.data ?? {}) as ComposeRequest;
+    if (typeof intent !== 'string' || !intent.trim())
+      throw new HttpsError('invalid-argument', 'intent is required.');
+    if (intent.length &gt; MAX_INPUT) throw new HttpsError('invalid-argument', '...');
+
+    const { tier, remaining } = await consumeQuota(uid, 'compose'); <span class="c">// kotanın TEK yeri</span>
+    const safePersona = sanitizePersona(persona, tier === 'premium');<span class="c">// ton hafızası premium-only</span>
+
+    const system = buildComposerSystemPrompt(locale, safePersona);
+    const result = await completeJSON&lt;ComposerResult&gt;(client, { system, user: intent.trim(), maxTokens: 800 });
+    validateComposer(result);
+
+    const locked = tier === 'free' ? PREMIUM_TONES : [];
+    for (const tone of locked) result.variants[tone] = '';          <span class="c">// kilitli ton metnini sunucuda boşalt</span>
+    return { result, meta: { tier, remaining, locked } };
+  }
+);</pre>
+  <p><code>sanitizePersona</code> ayrıca suistimali sınırlar: yalnızca premium kullanıcıda çalışır, en fazla 5 örnek × 500 karakter alır, isim 60 karaktere kapanır. <code>decode</code> handler'ı aynı iskelete sahiptir; tek farkı <code>withDefense</code>'in yalnızca premium'da onurlandırılması (<code>allowDefense = tier === 'premium' &amp;&amp; withDefense === true</code>) ve free kullanıcıda <code>defense</code> alanının silinmesidir.</p>
+
+  <h3>Kota — yarış-koşulsuz transaction (<code>quota.ts</code>)</h3>
+  <p>Kota bir Firestore transaction'ında atomik olarak okunur ve artırılır; iki eşzamanlı istek limiti aşamaz. Gün, <code>RESET_TZ</code> (varsayılan UTC) zaman diliminde <code>YYYY-MM-DD</code> anahtarıyla hesaplanır; tarih değişince sayaç sıfırlanır. <code>tier</code> burada <i>okunur</i> ama yazılmaz (onu webhook yazar).</p>
+<div class="filehdr">functions/src/quota.ts (çekirdek)</div>
+<pre>return db.runTransaction(async (tx) =&gt; {
+  const data = (await tx.get(ref)).data() ?? {};
+  const tier = data.tier === 'premium' ? 'premium' : 'free';   <span class="c">// eksik doc → free</span>
+  const usage = data.usage?.date === day ? { ...data.usage }
+                                         : { date: day, decode: 0, compose: 0 };
+  if (tier === 'free' &amp;&amp; (usage[action] ?? 0) &gt;= FREE_LIMITS[action])
+    throw new HttpsError('resource-exhausted', `Daily free limit reached for ${action}.`);
+  usage[action] = (usage[action] ?? 0) + 1;
+  tx.set(ref, { tier, usage, lastSeen: FieldValue.serverTimestamp() }, { merge: true });
+  return { tier, remaining: /* free: kalan, premium: null */ };
+});</pre>
+
+  <h3>Claude çağrısı — güvenilir JSON (<code>anthropic.ts</code>)</h3>
+  <p>Model'den yapılandırılmış çıktı almanın iki numarası: (1) asistan turunu <code>{</code> ile <b>prefill</b> etmek — model bir JSON nesnesi ve başka hiçbir şey üretmeye zorlanır; (2) ilk parse başarısız olursa düşük sıcaklıkta bir kez retry. <code>parseLoose</code> kod-çitlerini soyar ve en dıştaki süslü parantezlere keser.</p>
+<div class="filehdr">functions/src/anthropic.ts — completeJSON</div>
+<pre>export async function completeJSON&lt;T&gt;(client, { system, user, maxTokens, temperature = 0.8 }): Promise&lt;T&gt; {
+  const primary = await client.messages.create({
+    model: MODEL, max_tokens: maxTokens, temperature, system,
+    messages: [ { role: 'user', content: user },
+                { role: 'assistant', content: '{' } ],   <span class="c">// ← prefill</span>
+  });
+  try { return parseLoose&lt;T&gt;('{' + textOf(primary)); }
+  catch {
+    const retry = await client.messages.create({ /* temperature: 0.2, "Return ONLY the JSON object." */ });
+    return parseLoose&lt;T&gt;('{' + textOf(retry));
+  }
+}</pre>
+
+  <h3>RevenueCat webhook — <code>users.tier</code>'ın tek yazarı (<code>revenuecat.ts</code>)</h3>
+  <p>Bu <code>onRequest</code> fonksiyonu, sistemde <code>tier</code>'a yazan <b>tek</b> yerdir. RevenueCat'i buraya <code>Authorization</code> başlığı <code>REVENUECAT_WEBHOOK_AUTH</code> secret'ına eşit olacak şekilde POST atmaya yapılandırırsın; app'in RevenueCat <code>appUserID</code>'sini Firebase <code>uid</code>'ine eşitlersin, böylece <code>app_user_id</code> doğrudan kullanıcı belgesine map'lenir.</p>
+<div class="filehdr">functions/src/revenuecat.ts (çekirdek)</div>
+<pre>const ACTIVE = new Set(['INITIAL_PURCHASE','RENEWAL','UNCANCELLATION',
+  'PRODUCT_CHANGE','NON_RENEWING_PURCHASE','SUBSCRIPTION_EXTENDED']);
+const INACTIVE = new Set(['EXPIRATION','SUBSCRIPTION_PAUSED']);  <span class="c">// iptalde değil, SÜRESİ DOLUNCA düşür</span>
+
+export const revenuecatWebhook = onRequest({ region: REGION, secrets: [REVENUECAT_WEBHOOK_AUTH] },
+  async (req, res) =&gt; {
+    if (req.headers.authorization !== REVENUECAT_WEBHOOK_AUTH.value())
+      return void res.status(401).send('unauthorized');
+    const e = req.body?.event;
+    if (ACTIVE.has(e?.type))   await setTier(e.app_user_id, 'premium', e.expiration_at_ms);
+    else if (INACTIVE.has(e?.type)) await setTier(e.app_user_id, 'free');
+    res.status(200).send('ok');
+  });</pre>
+  <p>İptal anında erişim hemen kesilmez — kullanıcı dönem sonuna kadar premium kalır, yalnızca <code>EXPIRATION</code>'da düşürülür. <code>premiumUntil</code> ayrıca saklanır ve bir savunma katmanı olarak kullanılabilir (webhook gecikse bile zaman damgası gelecekteyse premium korunur). Diğer iki fonksiyon: <code>openPlaza</code> (günün kartını döner, <code>plazaStats</code> agregat sayacını artırır) ve <code>reengageLapsed</code> (günlük 17:30 UTC; 3+ gündür açmayan, push token'ı olan kullanıcılara Expo Push ile yeniden-etkileşim bildirimi).</p>
+</div>
+
+<!-- ============ FIRESTORE ============ -->
+<div class="pb section">
+  <h2 style="margin-top:0">Firestore — şema, kurallar, indeksler</h2>
+  <h3>Şema</h3>
+  <table>
+    <thead><tr><th style="width:34%">Yol / alan</th><th style="width:16%">Yazan</th><th>Notlar</th></tr></thead>
+    <tbody>
+      <tr><td><code>users/{uid}</code> · <code>tier</code>, <code>premiumUntil</code></td><td>sunucu (webhook)</td><td>Entitlement'in tek doğruluk kaynağı. Proxy buna güvenir.</td></tr>
+      <tr><td><code>users/{uid}</code> · <code>usage</code>, <code>lastSeen</code></td><td>sunucu (proxy)</td><td>Günlük kota sayaçları + son görülme.</td></tr>
+      <tr><td><code>users/{uid}</code> · <code>prefs</code>, <code>streak</code>, <code>pushToken</code>, <code>onboardingDone</code>, <code>displayLocale</code></td><td>istemci</td><td>Yalnızca güvenli alanlar (aşağıdaki kural whitelist'i).</td></tr>
+      <tr><td><code>dailyPlaza/{YYYY-MM-DD}</code></td><td>pipeline</td><td><code>{ date, format, locales: { tr, en } }</code>. Tüm girişli kullanıcılar okur.</td></tr>
+      <tr><td><code>plazaStats/{YYYY-MM-DD}</code></td><td>sunucu</td><td>"Yalnız değilsin" agregat sayacı.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Güvenlik kuralları — neden böyle (<code>firestore.rules</code>)</h3>
+  <p>İstemcinin kendi belgesine yazabileceği alanlar bir whitelist (<code>safeUserKeys</code>) ile sınırlıdır. <b>Kritik:</b> <code>tier</code> ve <code>usage</code> bu listede <b>yoktur</b> — yalnızca kuralları bypass eden Admin SDK (sunucu) onları yazabilir. Kullanıcının kendine premium vermesini ya da kotasını sıfırlamasını engelleyen tek şey budur. <code>diff().affectedKeys().hasOnly(...)</code> kalıbı, update'te yalnızca whitelist alanlarının değiştiğini garanti eder.</p>
+<div class="filehdr">firestore.rules</div>
+<pre>function safeUserKeys() {
+  return ['prefs','pushToken','onboardingDone','displayLocale','streak','updatedAt'];
+}
+match /users/{uid} {
+  allow read:   if request.auth != null &amp;&amp; request.auth.uid == uid;
+  allow create: if request.auth.uid == uid
+    &amp;&amp; request.resource.data.keys().hasOnly(safeUserKeys());
+  allow update: if request.auth.uid == uid
+    &amp;&amp; request.resource.data.diff(resource.data).affectedKeys().hasOnly(safeUserKeys());
+  allow delete: if request.auth.uid == uid;        <span class="c">// KVKK: kullanıcı kendini siler</span>
+}
+match /dailyPlaza/{day} { allow read: if request.auth != null; allow write: if false; }
+match /plazaStats/{day} { allow read: if request.auth != null; allow write: if false; }
+match /{document=**} { allow read, write: if false; }   <span class="c">// default deny</span></pre>
+  <p><code>dailyPlaza</code> ve <code>plazaStats</code> istemciye salt-okunur, yazımı tamamen sunucuya bırakılmıştır. En sonda bir "default deny" kuralı, tanımlanmamış her yolu kapatır. Bileşik sorgu gerektiren tek erişim <code>reengageLapsed</code>'in <code>lastSeen</code> filtresidir; ilgili indeks <code>firestore.indexes.json</code>'da tanımlıdır.</p>
+</div>
+
+<!-- ============ MOBILE ============ -->
+<div class="pb section">
+  <h2 style="margin-top:0">apps/mobile — Expo SDK 54</h2>
+  <p>Expo Router (dosya-tabanlı yönlendirme), Firebase JS SDK, Reanimated 4. <b>Tasarım kararı:</b> native Firebase yerine <i>JS SDK</i> seçildi, çünkü Anonymous Auth ve proxy çağrıları Expo Go'da bile (native config olmadan) çalışsın istedik — geliştirme döngüsü hızlansın. Native gereksinim yalnızca paylaşım-capture ve RevenueCat için var (dev build).</p>
+<div class="filehdr">apps/mobile yapısı</div>
+<pre>app/
+  _layout.tsx          <span class="c"># font yükleme + ErrorBoundary + anonim giriş + initCrash + track('app_open')</span>
+  (tabs)/{index,decoder,composer,profile}.tsx   <span class="c"># Günlük / Decoder / Composer / Profil</span>
+  onboarding · paywall · archive · report · personas   <span class="c"># modal/stack ekranlar</span>
+src/
+  theme.ts             <span class="c"># marka token'ları (kod olarak tasarım)</span>
+  lib/{firebase,api,user,history,personas,notifications,purchases,analytics,crash,locale,strings}.ts
+  components/{ToneDial,ShareCard,Meter,PlazaCard,Header,ErrorBoundary,ui/*}.tsx</pre>
+
+  <h3>Tasarım = kod (<code>theme.ts</code>)</h3>
+  <p>Onaylanan estetik doğrudan token'a çevrildi. Light ve dark iki ayrı palet; ama <code>paperTheme</code> her zaman kâğıttır ve <code>ShareCard</code> bunu kullanır — paylaşım kartının grup sohbetinde tanınması bu kâğıt+damga kimliğine bağlı.</p>
+<div class="filehdr">apps/mobile/src/theme.ts (özet)</div>
+<pre>export const STAMP_RED = '#BC3B2E';
+const light = { mode:'light', bg:'#F4F1EA'/*kağıt*/, card:'#FBFAF6', text:'#221F1B'/*mürekkep*/,
+                accent:STAMP_RED, /* … */ };
+const dark  = { mode:'dark',  bg:'#1B1916'/*füme*/, card:'#23201C', text:'#F0EBE0'/*krem*/,
+                accent:'#D6584A', /* … */ };
+export const paperTheme = light;                <span class="c">// ShareCard her iki temada da kağıt kalır</span>
+export const radius = { sm:6, md:9, lg:12, xl:16, pill:999 };
+export const space  = { xs:4, sm:8, md:12, lg:16, xl:22, xxl:28 };
+export const font   = { serif:'Fraunces_600SemiBold', sans:'Inter_400Regular', /* … */ };</pre>
+
+  <h3>İmza etkileşim — Ton Kadranı (<code>components/ToneDial.tsx</code>)</h3>
+  <p>Reanimated 4 + Gesture Handler. Parmak sürüklenirken <code>progress</code> shared value canlı takip eder; bırakınca en yakın tona <code>withSpring</code> ile snap'ler ve <code>runOnJS</code> ile JS tarafında haptik + çıktı güncellemesi tetikler. Tap ile de seçilebilir (<code>Gesture.Exclusive</code>). Erişilebilirlik için <code>accessibilityRole="adjustable"</code>.</p>
+<div class="filehdr">components/ToneDial.tsx (çekirdek)</div>
+<pre>const pan = Gesture.Pan()
+  .onUpdate((e) =&gt; { progress.value = clamp(start + e.translationX / step, 0, 3); })
+  .onEnd(() =&gt; {
+    const i = Math.round(progress.value);
+    progress.value = withSpring(i);   <span class="c">// en yakın tona snap</span>
+    runOnJS(commit)(i);               <span class="c">// haptik tıkırtı + çıktıyı değiştir</span>
+  });
+const gesture = Gesture.Exclusive(pan, Gesture.Tap().onEnd(/* tap-to-select */));</pre>
+
+  <h3>Viral artefakt — ShareCard (<code>components/ShareCard.tsx</code>)</h3>
+  <p>Kart <code>forwardRef</code> ile bir <code>View</code> ref'i dışarı verir; <code>captureRef</code> bunu PNG'ye basar ve <code>expo-sharing</code> OS paylaşım sayfasına gönderir. Kart <code>paperTheme</code> ile her iki modda da kâğıt kalır; karekod <code>react-native-qrcode-svg</code> ile gömülür.</p>
+<div class="filehdr">components/ShareCard.tsx (capture)</div>
+<pre>export const ShareCard = forwardRef&lt;View, ShareCardProps&gt;(function ShareCard(props, ref) { /* … */ });
+
+export async function shareCard(ref) {
+  const uri = await captureRef(ref, { format: 'png', quality: 1 });
+  if (await Sharing.isAvailableAsync()) await Sharing.shareAsync(uri, { mimeType: 'image/png' });
+}</pre>
+
+  <h3>Durum ve API</h3>
+  <p><b>Kullanıcı bağlamı (<code>lib/user.tsx</code>):</b> anonim giriş yapar, Firestore kullanıcı belgesine abone olur ve <code>{ uid, loaded, tier, prefs, streak, onboardingDone, locale, updatePrefs, completeOnboarding, markDailyEngaged }</code> sözleşmesini verir. İstemci yalnızca güvenli alanları yazar (kurallarla uyumlu). <b>API istemcisi (<code>lib/api.ts</code>):</b> proxy'ye tipli sarmalayıcılar (<code>decode/compose/openPlaza</code>); <code>resource-exhausted</code> hatasını lokalize bir kota mesajına çevirir.</p>
+  <div class="filehdr">apps/mobile/src/lib/api.ts</div>
+<pre>export async function compose(intent: string, locale: Locale, persona?: ComposePersona) {
+  const fn = httpsCallable&lt;unknown, ComposeResponse&gt;(functions, 'compose');
+  const { data } = await fn({ intent, locale, persona });
+  return data;   <span class="c">// { result, meta: { tier, remaining, locked } }</span>
+}</pre>
+
+  <h3>Gizlilik: hassas veri yalnızca cihazda</h3>
+  <p>Kullanıcının gerçek mailleri (Arşiv) ve eğittiği personalar (Ton Hafızası) sunucuya <b>hiç</b> gitmez — AsyncStorage'da, cihazda saklanır. Sunucu yalnızca o anki çağrıyı görür, profil olarak tutmaz. Bu, ürünün gizlilik vaadinin kod-seviyesindeki garantisidir.</p>
+<div class="filehdr">apps/mobile/src/lib/history.ts</div>
+<pre>const KEY = 'cb_history_v1'; const MAX = 120;
+<span class="c">// History lives ONLY on the device (AsyncStorage), never on our servers.</span>
+export async function getHistory(): Promise&lt;HistoryEntry[]&gt; {
+  const raw = await AsyncStorage.getItem(KEY);
+  return raw ? JSON.parse(raw) : [];
+}
+export async function addHistory(entry: Omit&lt;HistoryEntry,'id'|'ts'&gt;) { /* prepend + slice(0,MAX) */ }</pre>
+  <p><b>Bildirimler (<code>lib/notifications.ts</code>):</b> commute-timed yerel hatırlatmalar cihazda zamanlanır (sunucu zaman-dilimi cebelleşmesi olmadan kesin pencere). İzin akışı + Expo push token kaydı da burada. <b>Sağlamlık dikişleri:</b> <code>analytics.ts</code> (7 yüzeyde <code>track()</code>, PostHog seam), <code>crash.ts</code> + <code>ErrorBoundary</code> (Sentry seam) — ikisi de tek satırla bağlanır. Fontlar <code>_layout.tsx</code>'te <code>expo-font</code> ile yüklenir; yüklenmezse sistem fontuna düşer.</p>
+  <div class="why"><b>Expo Go vs dev build:</b> Navigasyon, Ton Kadranı ve Firebase çağrıları Expo Go'da çalışır. Paylaşım-capture ve RevenueCat <b>dev build</b> ister. <code>package.json</code>'daki native sürümleri <code>npx expo install</code> ile SDK 54'e tam hizala.</p>
+</div>
+
+<!-- ============ PIPELINE + ADMIN ============ -->
+<div class="pb section">
+  <h2 style="margin-top:0">content-pipeline ve admin</h2>
+  <h3>content-pipeline — Günlük Plaza üretimi</h3>
+  <p>tsx CLI. Günlük kartları canlı API'ye bağlamak yerine Claude ile aylık batch üretip <code>dailyPlaza/{date}</code>'e yazar. <b>Neden batch:</b> maliyet öngörülebilirliği ve içerik tutarlılığı — günde binlerce kullanıcı aynı kartı çekecekse, onu bir kez üretmek mantıklı. Voice rules + format rotasyonu (<code>trap → riddle → horoscope → bingo</code>) prompt'larda. Hem pipeline hem app, bir payload'a güvenmeden önce core'dan paylaşılan <code>isValidPayload</code> ile doğrular:</p>
+<div class="filehdr">packages/core/src/plaza.ts — isValidPayload</div>
+<pre>export function isValidPayload(format: PlazaFormat, p: any): boolean {
+  switch (format) {
+    case 'trap':      return typeof p.incoming === 'string' &amp;&amp; typeof p.reading === 'string'
+                          &amp;&amp; typeof p.meter === 'number' &amp;&amp; p.meter &gt;= 0 &amp;&amp; p.meter &lt;= 100;
+    case 'bingo':     return Array.isArray(p.cells) &amp;&amp; p.cells.length === 9;   <span class="c">// 3×3</span>
+    case 'horoscope': return typeof p.sign === 'string' &amp;&amp; typeof p.text === 'string';
+    case 'riddle':    return typeof p.term === 'string' &amp;&amp; typeof p.answer === 'string';
+  }
+}</pre>
+
+  <h3>admin — Next.js 15 (sunucu-taraflı Admin SDK)</h3>
+  <p>Tüm veri erişimi <b>server component / server action</b> içinde Firebase Admin SDK ile yapılır — anahtarlar tarayıcıya hiç gitmez. Erişim, HMAC imzalı bir cookie ile korunur. <code>verifySession</code> sabit-zamanlı karşılaştırma (<code>timingSafeEqual</code>) kullanır; <code>requireAdmin</code> her korumalı sayfanın başında çağrılır ve geçersizse <code>/login</code>'e yönlendirir.</p>
+<div class="filehdr">admin/lib/auth.ts (çekirdek)</div>
+<pre>export function signSession(payload = 'admin'): string {
+  const sig = crypto.createHmac('sha256', SECRET).update(payload).digest('hex');
+  return `${payload}.${sig}`;
+}
+export function verifySession(token?: string): boolean {
+  const [p, sig] = (token ?? '').split('.');
+  const expected = crypto.createHmac('sha256', SECRET).update(p).digest('hex');
+  return crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected));
+}
+export async function requireAdmin() {                 <span class="c">// her korumalı sayfada</span>
+  if (!verifySession((await cookies()).get(COOKIE)?.value)) redirect('/login');
+}</pre>
+  <p>Panel üç bölüm sunar: <b>dashboard</b> (temel metrikler), <b>plaza</b> (günlük kartları listeler + editör — kaydetmeden önce <code>isValidPayload</code> ile doğrular), <b>users</b>. Plaza kaydı bir server action'dır: <code>requireAdmin()</code> → doğrulama → <code>adminDb.collection('dailyPlaza').doc(day).set(...)</code> → <code>revalidatePath('/plaza')</code>.</p>
+
+  <h3>web — landing + KVKK</h3>
+  <p>Firebase Hosting (<code>cleanUrls</code>). EN için <code>privacy.html</code>/<code>terms.html</code>, TR için <code>gizlilik.html</code> (KVKK aydınlatma metni) + <code>kullanim.html</code>. <code>firebase.json</code>'da <code>/kvkk → /gizlilik.html</code> rewrite'ı var. Paylaşım kartındaki karekodun işaret ettiği landing burada.</p>
+</div>
+
+<!-- ============ GÜVENLİK + DAĞITIM + KALİTE ============ -->
+<div class="pb section">
+  <h2 style="margin-top:0">Güvenlik, dağıtım, devir ve kalite</h2>
+
+  <h3>Gizlilik &amp; KVKK</h3>
+  <ul>
+    <li><b>Minimum veri:</b> anonim başlangıç, kişisel veri istenmez; kim olduğun bilinmez.</li>
+    <li><b>Yerel-only hassas veri:</b> gerçek mailler ve personalar cihazda (AsyncStorage), sunucuda profil tutulmaz.</li>
+    <li><b>Silme hakkı:</b> kullanıcı kendi belgesini tek dokunuşla siler; kurallar bunu garanti eder (yalnızca kendi belgesi).</li>
+    <li><b>Locale-aware yasal metinler:</b> TR aydınlatma metni + EN privacy/terms. Yasal metinler bir KVKK avukatınca gözden geçirilmeli.</li>
+  </ul>
+
+  <h3>Dağıtım ve devir adımları</h3>
+  <p>Bunlar devralan yazılımcının yapması gereken, kod-tamam ama yapılandırma-bekleyen adımlardır:</p>
+  <table>
+    <thead><tr><th style="width:26%">Adım</th><th>Yapılacak</th></tr></thead>
+    <tbody>
+      <tr><td>Secret'lar</td><td><code>firebase functions:secrets:set ANTHROPIC_API_KEY</code> ve <code>REVENUECAT_WEBHOOK_AUTH</code>. Admin için <code>ADMIN_SESSION_SECRET</code>.</td></tr>
+      <tr><td>Firebase config</td><td>Mobil <code>.env</code> (web config), <code>app.json</code> EAS <code>projectId</code>, Apple/Play kimlikleri (<code>eas.json</code>'daki <code>REPLACE_*</code>).</td></tr>
+      <tr><td>Deploy</td><td><code>firebase deploy</code> (functions + firestore.rules + indexes + hosting). Functions predeploy esbuild bundle'ı çalıştırır.</td></tr>
+      <tr><td>RevenueCat</td><td>'premium' entitlement + offering oluştur; webhook'u proxy URL'ine, <code>Authorization</code>=secret ile bağla; <code>appUserID</code>=Firebase uid.</td></tr>
+      <tr><td>İçerik</td><td>Pipeline'ı çalıştırıp ilk ay(lar)ın Günlük Plaza kartlarını üret.</td></tr>
+      <tr><td>EAS build</td><td><code>npx expo install</code> ile native sürümleri SDK54'e hizala; <code>development</code> profili ile dev-build smoke testi.</td></tr>
+      <tr><td>İsteğe bağlı</td><td>PostHog / Sentry / App Check tek-satır bağla (<code>docs/infrastructure.md</code>); <code>ENFORCE_APP_CHECK=true</code> yap.</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Dev-build smoke testi (kabul kriteri)</h3>
+  <p>Sandbox'ta tam Expo/Next runtime'ı çalıştırılamaz (native modüller + cihaz gerekir). Statik olarak doğrulanabilecek her şey doğrulandı; geriye cihazda şu sekiz-adımlı akışın doğrulanması kalıyor: <b>(1)</b> anonim giriş → <b>(2)</b> Günlük Plaza yüklenir → <b>(3)</b> Decoder/Composer kotası sayar → <b>(4)</b> Ton Kadranı + haptik → <b>(5)</b> sandbox satın alma → <b>(6)</b> webhook <code>tier</code>'ı premium yapar → <b>(7)</b> paylaşım kartı PNG'ye basılır → <b>(8)</b> hesap silme.</p>
+
+  <h3>Kalite — doğrulanmış durum</h3>
+  <table>
+    <thead><tr><th>Kontrol</th><th>Sonuç</th></tr></thead>
+    <tbody>
+      <tr><td>Typecheck — core / functions (+esbuild bundle) / pipeline</td><td><span class="tick">✓</span> temiz</td></tr>
+      <tr><td>Syntax — mobil 30 dosya · admin 14 dosya</td><td><span class="tick">✓</span> 0 hata</td></tr>
+      <tr><td>Core davranış testi — few-shot örnekleri</td><td><span class="tick">✓</span> 25 doğrulandı</td></tr>
+      <tr><td>Yerel import çözümleme (mobil)</td><td><span class="tick">✓</span> 177/177</td></tr>
+      <tr><td>String anahtarları · tema token'ları · core export'ları</td><td><span class="tick">✓</span> 87 · 14 · 17, eksik yok</td></tr>
+      <tr><td>Metre bantları · ton sırası · payload doğrulama · persona enjeksiyonu</td><td><span class="tick">✓</span> geçti</td></tr>
+    </tbody>
+  </table>
+
+  <h3>Operasyon: sesi yeniden ayarlama</h3>
+  <p>Ürünün ruhu koddan ayrılabilir; bir geliştirici stack'e dokunmadan tonu değiştirebilir. Üç kaldıraç:</p>
+  <ul>
+    <li><b>Topyekûn daha acımasız/ölçülü:</b> <code>meterBand()</code> eşiklerini kaydır (<code>tones.ts</code>).</li>
+    <li><b>Bir tonun karakterini değiştir:</b> ilgili tonun <code>direction</code> metnini düzenle — aynen prompt'a enjekte edilir.</li>
+    <li><b>Sesi keskinleştir:</b> <code>fewshot/</code> dizinine örnek ekle/değiştir. Yeni dil eklemek için <code>Locale</code>'i genişlet, her tona <code>label</code>/<code>direction</code> ekle, eşleşen few-shot dosyalarını oluştur.</li>
+  </ul>
+  <p class="muted" style="font-size:9.2pt;margin-top:12px">Ürün vizyonu, doğuş hikâyesi ve kullanıcı akışı için ayrı <b>Ürün Dokümanı</b>'na bakınız. Bu doküman kod tabanının teknik devir kılavuzudur.</p>
+</div>

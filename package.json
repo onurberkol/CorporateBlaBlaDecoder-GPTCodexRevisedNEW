@@ -1,0 +1,17 @@
+{
+  "name": "corporate-blabla",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps/*",
+    "admin",
+    "functions",
+    "content-pipeline"
+  ],
+  "scripts": {
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "build": "npm run build --workspace=@corporate-blabla/functions && npm run build --workspace=@corporate-blabla/admin",
+    "test": "npm run test --workspaces --if-present"
+  }
+}
