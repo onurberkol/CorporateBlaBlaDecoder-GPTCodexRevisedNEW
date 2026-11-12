@@ -19,7 +19,7 @@ import {
 import { useTheme, font, radius, space } from '@/theme';
 import { tr } from '@/lib/strings';
 import { useUser } from '@/lib/user';
-import { compose, QuotaError, type QuotaMeta } from '@/lib/api';
+import { BackendUnavailableError, compose, QuotaError, type QuotaMeta } from '@/lib/api';
 import { addHistory } from '@/lib/history';
 import { getPersonas, type Persona } from '@/lib/personas';
 import { track, Events } from '@/lib/analytics';
@@ -70,7 +70,7 @@ export default function ComposerScreen() {
       setTone('kind');
       track(Events.compose, { persona: !!persona, locale });
     } catch (e) {
-      setError(e instanceof QuotaError ? s('quota_done') : s('generic_error'));
+      setError(e instanceof QuotaError ? s('quota_done') : e instanceof BackendUnavailableError ? s('service_unavailable') : s('generic_error'));
     } finally {
       setLoading(false);
     }

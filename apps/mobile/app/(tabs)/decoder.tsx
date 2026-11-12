@@ -6,7 +6,7 @@ import type { DecoderResult } from '@corporate-blabla/core';
 import { useTheme, font, radius, space } from '@/theme';
 import { tr } from '@/lib/strings';
 import { useUser } from '@/lib/user';
-import { decode, QuotaError } from '@/lib/api';
+import { BackendUnavailableError, decode, QuotaError } from '@/lib/api';
 import { addHistory } from '@/lib/history';
 import { track, Events } from '@/lib/analytics';
 import { PaperCard, Button, Chip, Stamp } from '@/components/ui';
@@ -45,7 +45,7 @@ export default function DecoderScreen() {
         topTrap: res.result.traps[0]?.phrase,
       });
     } catch (e) {
-      setError(e instanceof QuotaError ? s('quota_done') : s('generic_error'));
+      setError(e instanceof QuotaError ? s('quota_done') : e instanceof BackendUnavailableError ? s('service_unavailable') : s('generic_error'));
     } finally {
       setLoading(false);
     }

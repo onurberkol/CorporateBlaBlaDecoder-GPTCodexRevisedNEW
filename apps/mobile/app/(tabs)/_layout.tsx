@@ -16,6 +16,7 @@ export default function TabsLayout() {
 
   return (
     <Tabs
+      initialRouteName="index"
       screenOptions={{
         headerShown: false,
         tabBarActiveTintColor: t.accent,
@@ -32,10 +33,6 @@ export default function TabsLayout() {
     >
       <Tabs.Screen
         name="index"
-        options={{ title: s('tab_daily'), tabBarIcon: icon('calendar-outline') }}
-      />
-      <Tabs.Screen
-        name="decoder"
         options={{ title: s('tab_decoder'), tabBarIcon: icon('mail-open-outline') }}
       />
       <Tabs.Screen
@@ -43,9 +40,14 @@ export default function TabsLayout() {
         options={{ title: s('tab_composer'), tabBarIcon: icon('create-outline') }}
       />
       <Tabs.Screen
+        name="plaza"
+        options={{ title: s('tab_daily'), tabBarIcon: icon('calendar-outline') }}
+      />
+      <Tabs.Screen
         name="profile"
         options={{ title: s('tab_profile'), tabBarIcon: icon('person-outline') }}
       />
+      <Tabs.Screen name="decoder" options={{ href: null }} />
     </Tabs>
   );
 }

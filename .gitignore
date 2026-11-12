@@ -1,0 +1,52 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Builds / outputs
+dist/
+build/
+lib/
+!apps/mobile/src/lib/
+!apps/mobile/src/lib/**
+.next/
+out/
+*.tsbuildinfo
+
+# Expo
+.expo/
+.expo-shared/
+*.orig.*
+web-build/
+
+# Native
+ios/
+android/
+*.keystore
+*.p8
+*.p12
+*.mobileprovision
+
+# Env & secrets — NEVER commit
+.env
+.env.*
+!.env.example
+google-services.json
+GoogleService-Info.plist
+serviceAccount*.json
+
+# Firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# Logs / misc
+*.log
+npm-debug.log*
+.npm-cache/
+.DS_Store
+Thumbs.db
+coverage/
+.vscode/
+.idea/
